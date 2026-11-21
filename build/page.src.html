@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>좌표로 본 라그랑주 승수 — 울타리 안의 최적점</title>
+<meta name="description" content="울타리(제약)가 있는 최적화를 좌표평면과 미분으로 함께 보는 연구실 해설. 원 위의 x + y, 공장의 최적 노동·자본 투입점(λ = 한계비용), 회귀의 경사하강과 릿지, 라쏘가 이 방법으로 풀리지 않는 이유까지.">
+<meta property="og:title" content="좌표로 본 라그랑주 승수 — 울타리 안의 최적점">
+<meta property="og:description" content="등고선이 울타리에 닿는 점 찾기. 공장의 노동·자본과 회귀의 가중치가 같은 그림으로 풀립니다.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://adminmrobo.github.io/lagrange_multiplier_lab/">
+<meta property="og:image" content="https://adminmrobo.github.io/optimization_3d_map/img/cover_index.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<!--@@CSS@@-->
+<style>
+.assume{border:1px dashed var(--terrain);background:#f4fbfb;border-radius:8px;padding:8px 12px;margin:10px 0;font-size:14.5px}
+.assume b{color:var(--terrain)}
+.sub{font-size:13px;color:var(--muted);font-weight:500;margin-left:6px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:760px){.two{grid-template-columns:1fr}}
+.gallery{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:10px 0 4px;padding:10px 14px;border:1px dashed var(--c-x);border-radius:12px;background:#f7f6fd}
+.gallery img{width:56px;height:56px;border-radius:10px;background:#fff;border:2px solid var(--c-x)}
+.gallery .gt{font-size:13.5px;color:var(--muted);flex:1 1 220px}
+.gallery .meter{display:flex;align-items:center;gap:8px;flex:1 1 220px}
+.gallery .meter i{display:block;height:10px;border-radius:6px;background:linear-gradient(90deg,#c42a6e,#e8892b);transition:width .4s}
+.gallery .meter .track{flex:1;background:#fff;border:1px solid var(--rule);border-radius:6px;overflow:hidden}
+.docsum{background:var(--panel2);border:1px solid var(--c-doc);border-radius:12px;padding:12px 16px;margin:16px 0}
+.docsum>b{color:var(--c-doc);display:block;margin-bottom:2px}
+.docsum .say{margin:6px 0;max-width:none}
+.roads{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}
+.roads div{border:1px solid var(--rule);border-radius:10px;padding:10px 12px;background:#fff;font-size:14.5px}
+.roads div b{display:block;color:var(--c-doc)}
+@media(max-width:760px){.roads{grid-template-columns:1fr}}
+.hcanvas canvas{height:340px}
+.rv{border:2px solid var(--c-asst);border-radius:14px;padding:14px 16px;margin:20px 0;background:#fff}
+.rv-h{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+.rv-h .rv-haru{width:52px;height:52px;border-radius:12px;border:2px solid var(--c-asst);background:#fff}
+.rv-t{flex:1 1 260px;font-size:14.5px;line-height:1.6}.rv-t b{color:var(--c-asst);font-size:16px}
+.rv-x{display:flex;gap:4px}.rv-x img{width:34px;height:34px;border-radius:8px;border:1.5px solid var(--c-x);background:#fff}
+.rv .eq{white-space:normal;overflow-wrap:anywhere;line-height:1.7}
+.rv-cond{font-size:13.5px;color:var(--muted);margin-left:6px}
+.rv .num{width:90px;padding:5px 8px;border:1px solid var(--rule);border-radius:8px;font:inherit}
+.mis{list-style:none;padding:0;margin:10px 0 0;counter-reset:m}
+.mis li{counter-increment:m;padding:7px 12px;border-radius:9px;border:1px solid var(--rule);margin:6px 0;font-size:14.5px;background:#fafbfc}
+.mis li::before{content:"미션 " counter(m) " · ";font-weight:700;color:var(--c-asst)}
+.mis li .st{float:right;font-weight:700;color:var(--muted);margin-left:8px}
+.mis li.ok{border-color:var(--gfp);background:#eef8f0}.mis li.ok .st{color:var(--gfp)}
+.rvscore{border:1px solid var(--c-asst);border-radius:12px;padding:12px 16px;margin:14px 0;background:#fff7fb}
+.rvscore ul{margin:6px 0 0;padding-left:18px;font-size:14.5px}
+
+</style>
+</head>
+<body>
+<nav class="top" aria-label="섹션 바로가기"><div class="row">
+  <a class="logo" href="https://adminmrobo.github.io/optimization_3d_map/">좌표로 본 <i>라그랑주 승수</i></a>
+  <div class="links">
+    <a href="#s1">1 지도</a><a href="#s2">2 원</a><a href="#s3">3 공장</a><a href="#s5">5 회귀</a><a href="#s6">6 릿지</a><a href="#s8">8 라쏘</a><a href="#duel">대결</a><a href="#sum">정리</a><a href="#kg">색인</a><a href="#export">꾸러미</a>
+  </div>
+</div></nav>
+
+<!-- lab-cover : 표지 그림(lg_cover)을 받기 전까지 그림판 표지 -->
+<div class="cover" id="cover" data-img="lg_cover"><div class="frame">
+  <canvas id="coverCv" aria-hidden="true"></canvas>
+  <div class="cast4"><img class="s" data-mood="sia_think" alt="" aria-hidden="true"><img data-mood="asst_nervous" alt="" aria-hidden="true"><img class="s" data-mood="moa_think" alt="" aria-hidden="true"><img class="s" data-mood="fly_point" alt="" aria-hidden="true"><img class="s" data-mood="robo_coin" alt="" aria-hidden="true"></div>
+  <span class="cap">하루의 첫 발표 — 인턴의 질문 여덟 개</span>
+  <span class="badge">그림판 표지 · 픽셀아트 표지 준비 중</span>
+  <span class="cover-chip">좌표로 본 라그랑주 승수 · 독립 챕터</span>
+</div></div>
+<!-- /lab-cover -->
+
+<header class="hero" id="top"><div class="wrap">
+  <div class="eyebrow">좌표축 위의 그릇 · 독립 챕터</div>
+  <h1>좌표로 본 라그랑주 승수 — 울타리 안의 최적점</h1>
+  <p class="question">넘으면 안 되는 울타리가 있을 때, 가장 좋은 점은 어떻게 찾을까요?</p>
+  <p class="lead">공장은 "16톤을 꼭 만든다"는 조건 안에서 비용을 줄이고, 모델은 "가중치가 너무 커지면 안 된다"는 조건 안에서 오차를 줄입니다. 이런 조건을 이 페이지에서는 <b>울타리</b>라고 부릅니다. 좌표평면에 그려 보면 두 문제는 같은 그림입니다. <b>높이가 같은 선(등고선)이 울타리에 딱 닿는 점</b>이 답이고, 그 점에서 나오는 숫자 하나가 <b>라그랑주 승수 λ</b>입니다.</p>
+  <p class="byline">글 · 안상선 ((주)M-Robo 대표) · <a href="https://adminmrobo.github.io/who_am_i/who_am_i.html">저자 소개</a> · 2026-11-22 · v1.0</p>
+  <div class="start"><b>처음이라면</b> 1 → 2 → 3 → 5 → 6 → 대결 순서로 보세요. 4·7·8은 두 번째 읽을 때 봐도 됩니다. 처음 읽을 때 복습 대시보드는 건너뛰어도 됩니다(본문만 약 40분). 단계마다 "이 단계의 가정" 상자와 박사의 정리, 그리고 조건을 바꿔 다시 풀어 보는 <b>복습·시연 대시보드</b>(미션 자동 판정)가 있습니다.</div>
+  <div class="kpis" aria-label="숫자 요약">
+    <div class="kpi g"><b id="k-c">—</b><span>원 울타리의 λ (울타리를 넓힐 때 늘어나는 값)<sup>①</sup></span></div>
+    <div class="kpi m"><b id="k-f">—</b><span>공장의 λ = 1톤 더 만드는 비용<sup>①</sup></span></div>
+    <div class="kpi a"><b id="k-r">—</b><span>릿지의 λ (울타리 값)<sup>①</sup></span></div>
+    <div class="kpi r"><b id="k-l">—</b><span>라쏘 답의 w₂ (정확히 0)<sup>①</sup></span></div>
+  </div>
+  <p class="muted" style="font-size:13px">① 이 페이지가 직접 계산한 설명용 예시값입니다. 공장 단위: 사람 수, 기계 대수, 하루 생산량(톤), 돈(만 원). 실제 공장·매장 자료가 아닙니다.</p>
+</div></header>
+
+<section class="sec" id="plain" aria-labelledby="h-plain"><div class="wrap">
+  <h2 id="h-plain">처음 오신 분께 — 이 페이지를 3줄로</h2>
+  <ol class="plain3">
+    <li><b>무엇을</b> "조건(울타리)을 지키면서 가장 좋은 점"을 좌표평면 위에서 눈으로 찾고, 미분으로 같은 답이 나오는지 확인합니다.</li>
+    <li><b>왜 중요한가</b> 예산 안의 생산 계획과, 과하게 외우지 않는 인공지능 모델(릿지)이 같은 방법으로 풀리기 때문입니다.</li>
+    <li><b>업무에서는</b> "조건을 한 단위 풀어 주면 얼마나 좋아지나"(λ)를 숫자로 말할 수 있습니다. 납품량 1톤 더의 원가, 규제를 조금 풀 때 줄어드는 오차가 그 예입니다.</li>
+  </ol>
+  <p class="plain-note">코드나 수식을 몰라도 됩니다. 인턴 시아·모아가 조수 하루에게 묻고, 하루가 학교 수학과 숫자 하나로 풀어 줍니다. 식은 "수식으로 보기"를 펼칠 때만 길게 나옵니다.</p>
+  <details class="abbr"><summary>기호·약어 풀이 (7개)</summary><div class="abbr-list">
+    <div><b>λ (람다)</b> <span>라그랑주 승수</span> — 울타리를 한 단위 넓혀 줄 때 목표가 얼마나 좋아지나. "울타리 값", "그림자 가격"이라고도 부른다.</div>
+    <div><b>∇ (나블라)</b> <span>그래디언트, 기울기 화살표</span> — 가장 가파르게 오르는 쪽을 가리키는 화살표.</div>
+    <div><b>ℒ</b> <span>라그랑지안</span> — 목표에 "λ × 울타리 식"을 붙인 식.</div>
+    <div><b>w₁ · w₂</b> <span>가중치</span> — 모델이 입력에 곱하는 숫자 두 개.</div>
+    <div><b>MP<sub>L</sub> · MP<sub>K</sub></b> <span>노동 · 자본의 한계생산</span> — 사람 한 명 · 기계 한 대를 더 쓸 때 늘어나는 생산.</div>
+    <div><b>릿지 · 라쏘</b> <span>Ridge · Lasso 회귀</span> — 가중치에 둥근 울타리(릿지) · 마름모 울타리(라쏘)를 친 회귀.</div>
+    <div><b>KKT</b> <span>카루시–쿤–터커 조건</span> — "넘지 말아야 할 선"(부등식 울타리)의 최적 조건. 6단계에서 이름만 봅니다.</div>
+  </div></details>
+</div></section>
+
+<main>
+<section class="sec" id="cast" aria-labelledby="h-cast"><div class="wrap">
+  <h2 id="h-cast">등장인물 — 오늘은 하루가 발표하는 날</h2>
+  <div class="cast" id="castgrid"></div>
+  <div class="gallery" aria-label="방청석"><img data-mood="x1_worry" alt="" aria-hidden="true"><img data-mood="x2_worry" alt="" aria-hidden="true"><img data-mood="x3_worry" alt="" aria-hidden="true"><span class="gt"><b>방청석 — 미공개 식구 셋</b><br>하루가 긴장할 때마다 같이 숨을 죽입니다.</span>
+    <span class="meter"><img id="haruMeterImg" data-mood="asst_tremble" alt="" aria-hidden="true" style="width:40px;height:40px;border-color:var(--c-asst)"><span class="track" aria-hidden="true"><i id="haruMeter" style="width:92%"></i></span><span class="muted" style="font-size:13px" id="haruMeterTx">하루의 긴장도</span></span></div>
+  <div data-dlg="hero"></div>
+  <div class="review30"><b>30초 복습 — 이 페이지에 필요한 것 두 가지</b> ① <b>기울기</b>: 오른쪽으로 1 갈 때 높이가 얼마나 바뀌나(1 가서 2 오르면 기울기 2). ② <b>편미분</b>: 축이 둘일 때 하나만 움직이고 다른 하나는 그대로 둔 기울기. 처음 보셔도 괜찮습니다. <a href="https://adminmrobo.github.io/optimization_3d_map/first_step_1.html">최적화 첫걸음 ①</a>에서 천천히 다룹니다.</div>
+  <div class="bridge gen"><b>이 페이지의 자리</b> <a href="https://adminmrobo.github.io/optimization_3d_map/first_step_2.html#s42">최적화 첫걸음 ② 4.2</a>(공장 식으로 푼 라그랑지안) → <b>이 페이지</b>(좌표평면과 미분으로 함께 보기, 회귀까지) → <a href="https://adminmrobo.github.io/optimization_3d_map/1_math_map.html#s6">좌표축 위의 그릇 1편 ⑥</a>(3D 곡면 위 울타리 따라 걷기). 앞 페이지를 안 봤어도 이 페이지만으로 따라올 수 있습니다.</div>
+</div></section>
+
+<!-- 1 -->
+<section class="sec" id="s1" aria-labelledby="h-s1"><div class="wrap">
+  <h2 id="h-s1"><span class="hex">1</span>좌표평면 읽는 법 — 등고선과 화살표 <span class="sub">시아의 질문</span></h2>
+  <div data-dlg="s1"></div>
+  <div class="pair">
+    <div><div class="tl">일상으로 치면</div>등산 지도의 등고선은 높이가 같은 곳을 이은 선입니다. 등고선을 따라 걸으면 오르지도 내려가지도 않습니다. 그러니 가장 가파르게 오르려면 등고선을 <b>가로질러 직각으로</b> 가야 합니다.</div>
+    <div><div class="tr">수학에서는</div>높이 f(x, y)의 편미분 두 개를 묶은 화살표가 <b>그래디언트 ∇f</b>입니다. 이 화살표는 가장 가파른 오르막을 가리키고, 그 점을 지나는 등고선과 <b>항상 직각</b>입니다. 아래 그릇은 f = x²/4 + y²이고, ∇f = (x/2, 2y)입니다.</div>
+  </div>
+  <div class="panel">
+    <div class="ptitle">그릇 f = x²/4 + y² 의 등고선 지도 — 점을 옮기며 화살표 보기</div>
+    <div class="cwrap tall"><canvas id="cv1" aria-label="타원 등고선, 고른 점의 기울기 화살표와 접선"></canvas></div>
+    <div class="ctrl"><div class="group"><label class="glabel" for="r1x">점 옮기기 x</label><input type="range" id="r1x" min="-3" max="3" step="0.1" value="1.6"><span class="val" id="v1x">1.6</span>
+      <label class="glabel" for="r1y">점 옮기기 y</label><input type="range" id="r1y" min="-1.6" max="1.6" step="0.1" value="0.8"><span class="val" id="v1y">0.8</span></div></div>
+    <div class="eq" id="eq1"></div>
+    <div class="minis"><div class="mini a"><span>높이 f</span><b id="m1a">—</b></div><div class="mini g"><span>화살표 ∇f</span><b id="m1b" style="font-size:16px">—</b></div><div class="mini m"><span>화살표와 등고선 사이 각도</span><b id="m1c">—</b></div><div class="mini r"><span>화살표 길이 (가파른 정도)</span><b id="m1d">—</b></div></div>
+    <div class="insight" id="i1" aria-live="polite"></div>
+  </div>
+  <div class="assume"><b>이 단계의 가정</b> 높이가 매끄럽게 변하는 지도(어디서나 미분 가능). 8단계의 라쏘처럼 뾰족한 곳이 있으면 화살표가 하나로 정해지지 않는다.</div>
+  <div class="docsum"><b>박사의 정리</b><div data-dlg="s1end"></div></div>
+  <div class="rv" data-rv="1" id="rv1"></div>
+  <div class="quiz" data-quiz="q1"></div>
+</div></section>
+
+<!-- 2 -->
+<section class="sec" id="s2" aria-labelledby="h-s2"><div class="wrap">
+  <h2 id="h-s2"><span class="hex">2</span>원 울타리 위에서 가장 높은 곳 — 같은 답, 세 가지 길 <span class="sub">모아의 질문</span></h2>
+  <div data-dlg="s2"></div>
+  <div class="easy" id="ez2"><details class="ez-why" open><summary>왜 이 방법을 쓰나</summary><ol><li>문제: 원 x² + y² = 1 위에서만 걸을 수 있을 때 x + y가 가장 큰 점을 찾고 싶다.</li><li>앞 방법의 한계: "기울기 0인 곳"을 찾으면 x + y는 어디서도 기울기가 0이 아니라 답이 없다. 울타리를 빼고 계산했기 때문이다.</li><li><b>이 방법의 해법: 울타리를 계산 안에 넣는다. ① 울타리를 각도 하나로 바꾸거나 ② 등고선을 밀어 닿는 점을 찾거나 ③ 두 화살표가 한 직선 위에 놓이는 점을 찾는다. 셋 다 같은 답이다.</b></li></ol><p class="ez-easy"><b>쉽게 말하면</b> 담장 안 마당에서 가장 높은 곳은 마당 한가운데가 아니라 담장 어딘가에 붙어 있을 수 있다.</p></details>
+  <div class="ez-math"><div class="ez-t">수식이 낯선 분을 위해 — 모아가 묻고 하루가 답합니다</div><div class="ez-q"><img data-mood="moa_think" alt="" aria-hidden="true" style="border-color:var(--c-moa)"><p>∇f = λ∇g… 화살표 두 개가 "나란하다"는 게 무슨 뜻이에요?</p></div><p><b>학교 수학으로 보면</b> 고등학교 <b>삼각함수</b>와 <b>원의 접선</b>입니다. 원 위의 점은 (cos θ, sin θ)로 쓸 수 있고, 접선은 반지름과 직각입니다.</p><table class="ez-tb"><thead><tr><th>식 조각</th><th>읽는 법</th></tr></thead><tbody><tr><td>f = x + y</td><td>높이(목표). 등고선은 기울기 −1인 직선들</td></tr><tr><td>g = x² + y² − 1 = 0</td><td>울타리. 반지름 1인 원</td></tr><tr><td>∇f = (1, 1)</td><td>목표가 가장 빨리 커지는 쪽</td></tr><tr><td>∇g = (2x, 2y)</td><td>울타리에 직각인 쪽(원의 바깥쪽)</td></tr><tr><td>∇f = λ∇g</td><td>두 화살표가 한 직선 위, 길이 비율이 λ</td></tr></tbody></table><p><b>숫자로 한 번 해 보기</b> (1, 1) = λ(2x, 2y)이니 x = y. 원 위라서 2x² = 1, x = y = 0.707. 그러면 λ = 1 ÷ (2 × 0.707) = <b>0.707</b>, 가장 큰 값은 x + y = <b>1.414</b>입니다. 각도로 풀어도 f = cos θ + sin θ, 기울기 −sin θ + cos θ = 0 → θ = 45°로 같습니다.</p><div class="ez-q ez-c"><img data-mood="asst_spark" alt="" aria-hidden="true"><p>나란하다 = 목표 화살표가 울타리 화살표의 몇 배(λ배)다. 그래서 더 갈 데가 없는 거예요!</p></div></div></div>
+  <div class="dialog lvtalk" data-dlg="s2talk"></div>
+  <div class="panel">
+    <div class="ptitle">길 ② 직선 x + y = c 밀어 올리기 (왼쪽) · 같은 장면을 3D로 (오른쪽)</div>
+    <div class="two"><div class="cwrap hcanvas"><canvas id="cv2" aria-label="반지름 1인 원과 직선 x + y = c, 닿는 점의 두 화살표"></canvas></div><div class="cwrap t3 hcanvas"><canvas id="cv2c" aria-label="평면 z = x + y 위로 들어 올린 원 울타리와 가장 높은 점"></canvas></div></div>
+    <div class="ctrl"><div class="group"><label class="glabel" for="r2c">직선 높이 c</label><input type="range" id="r2c" min="0" max="2" step="0.01" value="0.8"><span class="val" id="v2c">0.80</span><button class="bt primary" id="b2" type="button">닿는 순간 찾기</button></div></div>
+    <div class="minis"><div class="mini a"><span>직선과 원이 만나는 점</span><b id="m2a">—</b></div><div class="mini g"><span>가장 높은 점</span><b id="m2b" style="font-size:16px">—</b></div><div class="mini m"><span>λ = |∇f| ÷ |∇g|</span><b id="m2c">—</b></div><div class="mini r"><span>울타리를 1 → 1.01로 넓히면</span><b id="m2d">—</b></div></div>
+    <div class="insight" id="i2" aria-live="polite"></div>
+  </div>
+  <div class="panel">
+    <div class="ptitle">길 ① 울타리를 각도 하나로 바꾸기 — 첫걸음에서 배운 1변수 미분</div>
+    <div class="cwrap"><canvas id="cv2b" aria-label="각도 θ에 따른 x + y 곡선과 접선"></canvas></div>
+    <div class="ctrl"><div class="group"><label class="glabel" for="r2t">각도 θ</label><input type="range" id="r2t" min="0" max="180" step="1" value="10"><span class="val" id="v2t">10°</span></div></div>
+    <div class="eq" id="eq2b"></div>
+  </div>
+  <div class="roads"><div><b>길 ① 각도로 바꾸기</b>f = cos θ + sin θ, 기울기 0 → θ = 45°</div><div><b>길 ② 등고선 밀기</b>직선이 원에 마지막으로 닿는 c = 1.414</div><div><b>길 ③ 화살표 나란히</b>∇f = λ∇g → (0.707, 0.707), λ = 0.707</div></div>
+  <div class="assume"><b>이 단계의 가정</b> 울타리는 "= 1" 등식 하나. 원 안쪽도 걸을 수 있는 "≤ 1"이어도 답은 같다(가장 높은 곳이 담장에 붙어 있으므로). 출발 자료: matharium 「Lagrange Multipliers」 카드의 예제를 새로 그렸다. 원본의 작은 기하 그림은 두 화살표가 나란하지 않게 그려져 있어 따르지 않았다.</div>
+  <div class="docsum"><b>박사의 정리</b><div data-dlg="s2end"></div></div>
+  <div class="rv" data-rv="2" id="rv2"></div>
+  <div class="quiz" data-quiz="q2"></div>
+</div></section>
+
+<!-- 3 -->
+<section class="sec" id="s3" aria-labelledby="h-s3"><div class="wrap">
+  <h2 id="h-s3"><span class="hex">3</span>경제 — 16톤을 가장 싸게 만드는 노동·자본 투입점 <span class="sub">모아의 질문</span></h2>
+  <div data-dlg="s3"></div>
+  <div class="assume"><b>3·4단계의 가정</b> ① 공장의 생산량 Q = 2√(L·K): 사람 L명과 기계 K대(설명용 식). ② 임금 w = 5만 원, 기계 사용료 r = 10만 원으로 정해져 있다(완전경쟁). ③ 납품량 16톤은 꼭 지킨다(등식 울타리). ④ 이 생산함수는 사람과 기계를 함께 두 배로 늘리면 생산도 두 배(규모수익불변)라서, 한계비용 λ가 생산량과 상관없이 7.07로 일정하고 평균비용과도 같다. 보통 공장처럼 생산을 늘릴수록 비용이 가파르게 오르면 λ도 생산량에 따라 바뀐다.</div>
+  <div class="pair">
+    <div><div class="tl">일상으로 치면</div>16톤을 만드는 방법은 많습니다. 사람을 많이 쓰고 기계를 조금 쓰거나, 그 반대거나. 그 조합을 이은 곡선이 <b>등량선</b>(16톤 울타리)입니다. 같은 돈이 드는 조합은 직선(<b>등비용선</b>)입니다. 직선을 안쪽으로 당기다가 곡선에 딱 닿는 점이 가장 싼 조합입니다.</div>
+    <div><div class="tr">수학에서는</div>2단계와 역할만 바뀝니다. 목표(비용 5L + 10K)의 등고선이 직선이고, 울타리(2√(LK) = 16)가 곡선입니다. 닿는 점에서 두 화살표가 나란합니다: ∇비용 = λ∇생산.</div>
+  </div>
+  <div class="dialog lvtalk" data-dlg="s3talk"></div>
+  <div class="panel">
+    <div class="ptitle">사람 L–기계 K 평면의 등량선과 비용 직선 (왼쪽) · 등량선을 비용 높이로 들어 올린 3D (오른쪽)</div>
+    <div class="two"><div class="cwrap hcanvas"><canvas id="cv3" aria-label="16톤 등량선과 비용 직선, 가장 싼 점"></canvas></div><div class="cwrap t3 hcanvas"><canvas id="cv3c" aria-label="비용 평면 위로 들어 올린 등량선과 가장 낮은 점"></canvas></div></div>
+    <div class="ctrl"><div class="group"><label class="glabel" for="r3c">쓸 돈 C (만 원)</label><input type="range" id="r3c" min="70" max="200" step="1" value="160"><span class="val" id="v3c">160</span><button class="bt primary" id="b3" type="button">가장 싼 점 찾기</button></div>
+      <div class="group"><label class="glabel" for="r3q">목표 생산량</label><input type="range" id="r3q" min="8" max="24" step="1" value="16"><span class="val" id="v3q">16톤</span></div></div>
+    <div class="minis"><div class="mini a"><span>가장 싼 비용 C*</span><b id="m3a">—</b></div><div class="mini g"><span>사람 L* · 기계 K*</span><b id="m3b" style="font-size:16px">—</b></div><div class="mini m"><span>직선과 곡선</span><b id="m3c" style="font-size:16px">—</b></div><div class="mini r"><span>λ</span><b id="m3d">—</b></div></div>
+    <div class="insight" id="i3" aria-live="polite"></div>
+  </div>
+  <div class="biz"><b>업무에서는 — 납품량이 정해진 견적</b> 고객이 "하루 16톤"을 정해 오면, 먼저 그 양을 가장 싸게 만드는 사람·기계 조합(11.3명·5.7대, 원가 113.1만 원)을 잡습니다. 사람이 싸다고 사람만 늘리면 기계가 모자라 생산이 잘 늘지 않습니다(예시값).</div>
+  <div class="docsum"><b>박사의 정리</b><div data-dlg="s3end"></div></div>
+  <div class="rv" data-rv="3" id="rv3"></div>
+</div></section>
+
+<!-- 4 -->
+<section class="sec" id="s4" aria-labelledby="h-s4"><div class="wrap">
+  <h2 id="h-s4"><span class="hex">4</span>미분으로 같은 답 — 그리고 λ = 한계비용 <span class="sub">시아의 질문</span></h2>
+  <div data-dlg="s4"></div>
+  <div class="easy"><details class="ez-why" open><summary>왜 이 방법을 쓰나</summary><ol><li>문제: 3단계의 "닿는 점"을 눈대중이 아니라 정확한 숫자로 구하고 싶다.</li><li>앞 방법의 한계: 그림으로는 대략 11명·6대까지만 읽힌다. 입력이 셋 이상이면 그릴 수도 없다.</li><li><b>이 방법의 해법: 닿는 점의 조건(두 화살표가 나란함)을 식으로 쓴다. 공장에서는 "만 원당 생산이 사람과 기계에서 같다"가 된다.</b></li></ol><p class="ez-easy"><b>쉽게 말하면</b> 돈 1만 원을 사람에게 써도, 기계에 써도 똑같이 생산이 늘 때까지 나눈다.</p></details>
+  <div class="ez-math"><div class="ez-t">수식이 낯선 분을 위해 — 시아가 묻고 하루가 답합니다</div><div class="ez-q"><img data-mood="sia_think" alt="" aria-hidden="true" style="border-color:var(--c-sia)"><p>ℒ = 5L + 10K − λ(2√(LK) − 16)… λ는 계산을 위한 보조 숫자 아닌가요?</p></div><p><b>학교 수학으로 보면</b> 중학교 <b>연립방정식</b>입니다. 미지수 L, K에 "16톤" 조건 하나가 붙으니, 그 조건을 지키게 하는 숫자 λ를 하나 더 두고 식 세 개를 함께 풉니다.</p><table class="ez-tb"><thead><tr><th>식 조각</th><th>읽는 법</th></tr></thead><tbody><tr><td>MP<sub>L</sub> = √(K/L)</td><td>사람 한 명 더의 생산 (편미분)</td></tr><tr><td>MP<sub>K</sub> = √(L/K)</td><td>기계 한 대 더의 생산</td></tr><tr><td>MP<sub>L</sub> ÷ 5 = MP<sub>K</sub> ÷ 10</td><td>만 원당 생산이 같다 → K/L = 1/2</td></tr><tr><td>λ = 5 ÷ MP<sub>L</sub></td><td>1톤 더 만드는 데 드는 돈</td></tr></tbody></table><p><b>숫자로 한 번 해 보기</b> L = 2K를 2√(LK) = 16에 넣으면 K = 5.66대, L = 11.31명, 비용 113.14만 원. 이때 사람 만 원당 생산 0.707 ÷ 5 = 0.1414, 기계 만 원당 생산 1.414 ÷ 10 = 0.1414로 같습니다. λ = 5 ÷ 0.707 = <b>7.07</b>. 실제로 17톤의 가장 싼 비용은 120.21로 <b>7.07</b>만큼 늡니다.</p><div class="ez-q ez-c"><img data-mood="asst_spark" alt="" aria-hidden="true"><p>λ는 보조 숫자가 아니라 "울타리 1톤의 값어치"예요. 경제학에서는 한계비용이라고 불러요.</p></div></div></div>
+  <div class="dialog lvtalk" data-dlg="s4talk"></div>
+  <div class="panel">
+    <div class="ptitle">16톤 울타리(등량선)를 따라 걸으며 비용과 "만 원당 생산" 보기</div>
+    <div class="cwrap"><canvas id="cv4" aria-label="등량선 위 사람 수에 따른 비용 곡선"></canvas></div>
+    <div class="ctrl"><div class="group"><label class="glabel" for="r4l">등량선 위의 사람 수 L</label><input type="range" id="r4l" min="4" max="28" step="0.1" value="20"><span class="val" id="v4l">20.0명</span><button class="bt" id="b4" type="button">17톤으로 올려 보기</button></div></div>
+    <div class="eq" id="eq4"></div>
+    <div class="minis"><div class="mini a"><span>기계 K (16톤을 맞추려면)</span><b id="m4a">—</b></div><div class="mini g"><span>사람 만 원당 생산</span><b id="m4b">—</b></div><div class="mini m"><span>기계 만 원당 생산</span><b id="m4c">—</b></div><div class="mini r"><span>비용</span><b id="m4d">—</b></div></div>
+    <div class="insight" id="i4" aria-live="polite"></div>
+  </div>
+  <div class="docsum"><b>박사의 정리</b><div data-dlg="s4end"></div></div>
+  <div class="rv" data-rv="4" id="rv4"></div>
+  <div class="quiz" data-quiz="q3"></div>
+</div></section>
+
+<!-- 5 -->
+<section class="sec" id="s5" aria-labelledby="h-s5"><div class="wrap">
+  <h2 id="h-s5"><span class="hex">5</span>회귀 — 울타리 없는 경사하강 <span class="sub">시아의 질문</span></h2>
+  <div data-dlg="s5"></div>
+  <div class="pair">
+    <div><div class="tl">일상으로 치면</div>매장 네 곳의 광고·할인과 매출 변화를 보고 "광고 1단위에 매출이 얼마, 할인 1단위에 얼마"를 맞히는 모델을 만듭니다. 맞히는 숫자가 가중치 w₁, w₂이고, 틀린 정도(오차)를 높이로 세우면 그릇이 됩니다. 경사하강은 그릇 바닥까지 한 걸음씩 내려가는 방법입니다.</div>
+    <div><div class="tr">수학에서는</div>오차 = 네 매장의 (실제 − 예측)² 평균. 이 데이터에서는 정확히 <b>(w₁ − 3)² + (w₂ − 1)²</b>이 됩니다(입력을 표준화해서 두 입력이 서로 겹치지 않게 골랐기 때문). 경사하강: 새 w = w − 학습률 × ∇오차.</div>
+  </div>
+  <div class="tblwrap"><table class="cmp"><thead><tr><th>매장</th><th>광고 x₁ (표준화)</th><th>할인 x₂ (표준화)</th><th>매출 변화 y</th></tr></thead><tbody><tr><td>가</td><td>+1</td><td>+1</td><td>+4</td></tr><tr><td>나</td><td>−1</td><td>+1</td><td>−2</td></tr><tr><td>다</td><td>+1</td><td>−1</td><td>+2</td></tr><tr><td>라</td><td>−1</td><td>−1</td><td>−4</td></tr></tbody></table></div>
+  <div class="dialog lvtalk" data-dlg="s5talk"></div>
+  <div class="panel">
+    <div class="ptitle">오차의 등고선 위에서 경사하강 — 바닥은 (3, 1)</div>
+    <div class="cwrap tall"><canvas id="cv5" aria-label="원형 오차 등고선과 경사하강 경로"></canvas></div>
+    <div class="ctrl"><div class="group"><label class="glabel" for="r5e">학습률 (보폭)</label><input type="range" id="r5e" min="0.05" max="1.05" step="0.05" value="0.1"><span class="val" id="v5e">0.10</span></div>
+      <div class="group"><button class="bt" id="b5s" type="button">한 걸음</button><button class="bt primary" id="b5a" type="button">끝까지 걷기 (30걸음)</button><button class="bt" id="b5r" type="button">처음으로</button></div></div>
+    <div class="minis"><div class="mini a"><span>걸음 수</span><b id="m5a">0</b></div><div class="mini g"><span>지금 가중치 (w₁, w₂)</span><b id="m5b" style="font-size:16px">—</b></div><div class="mini m"><span>오차</span><b id="m5c">—</b></div><div class="mini r"><span>바닥까지 거리</span><b id="m5d">—</b></div></div>
+    <div class="insight" id="i5" aria-live="polite"></div>
+  </div>
+  <div class="assume"><b>이 단계의 가정</b> 매장 네 곳의 예시 데이터(y = 3x₁ + x₂, 잡음 없음). 실제 데이터에서는 두 입력이 겹쳐 그릇이 길쭉해진다 → 대결에서 다룬다.</div>
+  <div class="docsum"><b>박사의 정리</b><div data-dlg="s5end"></div></div>
+  <div class="rv" data-rv="5" id="rv5"></div>
+</div></section>
+
+<!-- 6 -->
+<section class="sec" id="s6" aria-labelledby="h-s6"><div class="wrap">
+  <h2 id="h-s6"><span class="hex">6</span>왜 보통 회귀가 아니라 릿지인가 <span class="sub">모아의 질문</span></h2>
+  <div data-dlg="s6"></div>
+  <div class="easy"><details class="ez-why" open><summary>왜 이 방법을 쓰나</summary><ol><li>문제: 라그랑주 승수를 회귀에서도 보고 싶다.</li><li>앞 방법의 한계: 보통 회귀(5단계)에는 울타리가 없다. 기울기 0인 바닥에서 끝나니 λ가 나올 자리가 없다.</li><li><b>이 방법의 해법: 가중치 크기에 둥근 울타리(w₁² + w₂² ≤ 반지름²)를 친다. 이것이 릿지 회귀다. 울타리가 둥글고 매끄러워 2단계의 "화살표 나란히"를 그대로 쓸 수 있다.</b></li></ol><p class="ez-easy"><b>쉽게 말하면</b> 가중치가 너무 커지지 말라고 울타리를 치면, 그 순간 "울타리 값" λ가 생긴다. 보통 회귀는 울타리가 너무 넓어 닿지 않는 릿지, 곧 λ = 0인 릿지다.</p></details>
+  <div class="ez-math"><div class="ez-t">수식이 낯선 분을 위해 — 모아가 묻고 하루가 답합니다</div><div class="ez-q"><img data-mood="moa_think" alt="" aria-hidden="true" style="border-color:var(--c-moa)"><p>울타리가 "= 1"이 아니라 "≤ 1"이면 2단계랑 뭐가 달라요?</p></div><p><b>학교 수학으로 보면</b> <b>원의 방정식과 부등식의 영역</b>입니다. x² + y² ≤ r²는 원 안쪽 전부를 뜻합니다.</p><table class="ez-tb"><thead><tr><th>경우</th><th>답과 λ</th></tr></thead><tbody><tr><td>바닥이 울타리 밖</td><td>답은 울타리 위(원에 닿는 점), λ &gt; 0</td></tr><tr><td>바닥이 울타리 안</td><td>답은 바닥 그대로, 울타리가 안 닿으니 λ = 0</td></tr></tbody></table><p><b>숫자로 한 번 해 보기</b> 바닥 (3, 1)까지 거리는 √10 = 3.16. 반지름이 1이면 바닥이 밖에 있으니 답은 (3, 1)을 원 위로 줄인 (0.949, 0.316), λ = √10 − 1 = <b>2.16</b>. 반지름이 3.2면 바닥이 안에 들어와 답은 (3, 1), λ = <b>0</b>.</p><div class="ez-q ez-c"><img data-mood="asst_spark" alt="" aria-hidden="true"><p>"닿으면 λ가 생기고, 안 닿으면 0." 이 규칙의 이름이 KKT 조건이래요.</p></div></div></div>
+  <div class="dialog lvtalk" data-dlg="s6talk"></div>
+  <div class="panel">
+    <div class="ptitle">울타리 반지름을 바꾸며 — 언제 λ가 생기나</div>
+    <div class="cwrap tall"><canvas id="cv6" aria-label="원형 오차 등고선, 반지름을 바꾸는 울타리 원, 릿지의 답"></canvas></div>
+    <div class="ctrl"><div class="group"><label class="glabel" for="r6r">울타리 반지름</label><input type="range" id="r6r" min="0.2" max="4" step="0.05" value="1"><span class="val" id="v6r">1.00</span></div></div>
+    <div class="minis"><div class="mini a"><span>릿지의 답 (w₁, w₂)</span><b id="m6a" style="font-size:16px">—</b></div><div class="mini g"><span>오차</span><b id="m6b">—</b></div><div class="mini m"><span>λ (울타리 값)</span><b id="m6c">—</b></div><div class="mini r"><span>울타리가 닿았나?</span><b id="m6d" style="font-size:16px">—</b></div></div>
+    <div class="insight" id="i6" aria-live="polite"></div>
+  </div>
+  <div class="aibox"><div class="aihead"><span class="aitag">AI 답변 (예시)</span>"반지름 1인 울타리로 릿지 회귀를 돌렸습니다. 결과는 w = (3, 1), 오차 0, 울타리 값 λ = 2.16입니다. 울타리 덕분에 오차가 0이 되었습니다."</div><ol><li>답 w = (3, 1)은 반지름 1 울타리 안에 있다.</li><li>울타리를 쳤는데 오차가 0이다.</li><li>λ = 2.16인데 울타리가 오차를 줄였다.</li></ol></div>
+  <div class="aiq"><b>먼저 스스로 판단해 보기</b> 세 문장 각각 "맞다 / 틀리다"는? 위 실험에서 반지름을 1로 두고 확인해도 좋습니다.</div>
+  <details class="fold aians"><summary>확인해 보기 — 박사의 판정</summary><ol><li><b>틀리다.</b> (3, 1)의 길이는 √10 ≈ 3.16이라 반지름 1인 원 밖입니다. 울타리를 어긴 답입니다.</li><li><b>틀리다.</b> 바닥이 울타리 밖이면 울타리 안의 가장 낮은 오차는 0보다 큽니다(반지름 1이면 4.68).</li><li><b>틀리다.</b> 울타리는 오차를 줄이지 않고 <b>늘립니다</b>. 대신 가중치를 작게 지켜 새 데이터에서 덜 흔들리게 합니다. λ &gt; 0인데 답이 바닥 그대로라는 것도 서로 맞지 않는 조합입니다.</li></ol><p class="aiverdict"><b>정리</b> AI가 울타리 문제의 답을 주면 ① 답이 울타리 안에 있는지 ② λ &gt; 0이면 답이 울타리 위에 있는지 두 가지를 먼저 확인하세요.</p></details>
+  <div class="docsum"><b>박사의 정리</b><div data-dlg="s6end"></div></div>
+  <div class="rv" data-rv="6" id="rv6"></div>
+  <div class="quiz" data-quiz="q6"></div>
+</div></section>
+
+<!-- 7 -->
+<section class="sec" id="s7" aria-labelledby="h-s7"><div class="wrap">
+  <h2 id="h-s7"><span class="hex">7</span>릿지 — 울타리 안에서 경사하강하는 두 가지 길 <span class="sub">시아의 질문</span></h2>
+  <div data-dlg="s7"></div>
+  <div class="pair">
+    <div><div class="tl">일상으로 치면</div>길 ⓐ 마당 밖으로 나가면 담장 위로 다시 데려온다(되돌림). 길 ⓑ 담장 근처로 갈수록 "멀리 가면 벌금" 표지판이 붙어 있어 알아서 덜 간다(벌점). 벌금을 알맞게 정하면 두 사람은 같은 자리에서 멈춥니다.</div>
+    <div><div class="tr">수학에서는</div>ⓐ 한 걸음 내려간 뒤 원 밖이면 원 위로 줄인다(투영 경사하강). ⓑ 오차에 벌점 λ‖w‖²을 더한 새 그릇에서 그냥 경사하강. 볼록한 그릇에서는 λ = √10 − 1 ≈ 2.16일 때 두 답이 같다: w = (3, 1) ÷ (1 + λ) = (0.949, 0.316).</div>
+  </div>
+  <div class="dialog lvtalk" data-dlg="s7talk"></div>
+  <div class="panel">
+    <div class="ptitle">두 길의 경로 (왼쪽 평면) · 오차 그릇 위의 울타리와 경로 (오른쪽 3D)</div>
+    <div class="two"><div class="cwrap hcanvas"><canvas id="cv7" aria-label="되돌림 경사하강과 벌점 경사하강의 경로"></canvas></div><div class="cwrap t3 hcanvas"><canvas id="cv7c" aria-label="오차 그릇 위로 들어 올린 울타리 원과 두 경로"></canvas></div></div>
+    <div class="ctrl"><div class="group"><span class="glabel">걷기</span><div id="g7" style="display:inline-flex;gap:6px;flex-wrap:wrap"></div></div>
+      <div class="group"><button class="bt primary" id="b7" type="button">걷기 시작</button></div></div>
+    <div class="minis"><div class="mini a"><span>ⓐ 되돌림 끝점</span><b id="m7a" style="font-size:16px">—</b></div><div class="mini g"><span>ⓑ 벌점 끝점</span><b id="m7b" style="font-size:16px">—</b></div><div class="mini m"><span>두 끝점 사이 거리</span><b id="m7c">—</b></div><div class="mini r"><span>릿지의 답 (식)</span><b id="m7d" style="font-size:16px">—</b></div></div>
+    <div class="insight" id="i7" aria-live="polite"></div>
+  </div>
+  <div class="assume"><b>이 단계의 가정</b> 오차 그릇이 볼록하다(바닥이 하나). 볼록할 때만 "울타리 꼴"과 "벌점 꼴"이 같은 답을 준다. 학습률 0.1, 출발점 (−1.5, 2.5), 80걸음. 실무 프로그램(예: 사이킷런의 Ridge)은 반지름 대신 벌점 세기 λ(alpha)를 직접 받고, 그 값은 보통 검증 데이터로 고른다. 같은 λ가 어떤 반지름에 해당하는지는 데이터마다 다르다.</div>
+  <div class="docsum"><b>박사의 정리</b><div data-dlg="s7end"></div></div>
+  <div class="rv" data-rv="7" id="rv7"></div>
+</div></section>
+
+<!-- 8 -->
+<section class="sec" id="s8" aria-labelledby="h-s8"><div class="wrap">
+  <h2 id="h-s8"><span class="hex">8</span>라쏘는 왜 이 방법으로 풀리지 않나 <span class="sub">모아의 질문</span></h2>
+  <div data-dlg="s8"></div>
+  <div class="easy"><details class="ez-why" open><summary>왜 이 방법이 안 통하나</summary><ol><li>문제: 라쏘는 울타리를 |w₁| + |w₂| ≤ t(마름모)로 친다. 같은 방법으로 풀고 싶다.</li><li>앞 방법의 한계: 이 페이지의 방법은 "울타리 화살표 ∇g"가 있어야 한다. 마름모의 <b>모서리</b>는 뾰족해서 미분이 없고, 울타리 화살표가 하나로 정해지지 않는다.</li><li><b>그런데 답이 바로 그 모서리에 잘 떨어진다. 그래서 "두 화살표 나란히" 대신 "화살표가 두 모서리 방향 사이(부채꼴)에 들어오나"로 판정하는 다른 도구(서브그래디언트)가 필요하다.</b></li></ol><p class="ez-easy"><b>쉽게 말하면</b> 라쏘가 나쁜 게 아니라, 연장이 다르다. 그리고 모서리에 붙는 성질 덕분에 가중치 하나를 정확히 0으로 만든다(특성 지우기).</p></details>
+  <div class="ez-math"><div class="ez-t">수식이 낯선 분을 위해 — 모아가 묻고 하루가 답합니다</div><div class="ez-q"><img data-mood="moa_think" alt="" aria-hidden="true" style="border-color:var(--c-moa)"><p>절댓값이 들어가면 왜 미분이 안 돼요?</p></div><p><b>학교 수학으로 보면</b> 고등학교 <b>절댓값 함수 y = |x|</b>의 그래프입니다. x = 0에서 꺾여 V자가 되니 그 점의 접선 기울기가 하나로 정해지지 않습니다.</p><table class="ez-tb"><thead><tr><th>식 조각</th><th>읽는 법</th></tr></thead><tbody><tr><td>|w₁| + |w₂| ≤ 1</td><td>마름모 울타리. 꼭짓점 (±1, 0), (0, ±1)</td></tr><tr><td>모서리 (1, 0)의 두 면 방향</td><td>(1, 1)과 (1, −1). 그 사이가 부채꼴</td></tr><tr><td>−∇오차 = (4, 2)</td><td>모서리에서 오차가 가장 빨리 줄어드는 쪽</td></tr><tr><td>(4, 2) = 3·(1, 1) + 1·(1, −1)</td><td>두 수가 모두 0 이상 → 부채꼴 안 → 최적</td></tr></tbody></table><p><b>숫자로 한 번 해 보기</b> 같은 오차 (w₁ − 3)² + (w₂ − 1)², 울타리 크기 1. 라쏘의 답은 모서리 <b>(1, 0)</b>, 오차 5. w₂가 <b>정확히 0</b>입니다. 릿지는 (0.949, 0.316), 오차 4.68 — 둘 다 조금씩 줄어들 뿐 0이 되지 않습니다. 벌점 꼴로 쓰면 라쏘의 λ = 4입니다.</p><div class="ez-q ez-c"><img data-mood="asst_spark" alt="" aria-hidden="true"><p>둥근 울타리는 옆면에, 마름모 울타리는 모서리에 닿아요. 그래서 라쏘는 특성을 지울 수 있어요!</p></div></div></div>
+  <div class="dialog lvtalk" data-dlg="s8talk"></div>
+  <div class="panel">
+    <div class="ptitle">마름모 울타리(라쏘)와 둥근 울타리(릿지) — 어디에 닿나</div>
+    <div class="cwrap tall"><canvas id="cv8" aria-label="마름모 울타리와 원 울타리, 각각의 답과 모서리의 부채꼴"></canvas></div>
+    <div class="ctrl"><div class="group"><label class="glabel" for="r8t">울타리 크기 t</label><input type="range" id="r8t" min="0.4" max="4.4" step="0.05" value="1"><span class="val" id="v8t">1.00</span></div>
+      <div class="group"><span class="glabel">함께 그리기</span><div id="g8" style="display:inline-flex;gap:6px;flex-wrap:wrap"></div></div></div>
+    <div class="minis"><div class="mini a"><span>라쏘의 답 (w₁, w₂)</span><b id="m8a" style="font-size:16px">—</b></div><div class="mini g"><span>릿지의 답 (반지름 t)</span><b id="m8b" style="font-size:16px">—</b></div><div class="mini m"><span>라쏘의 w₂</span><b id="m8c">—</b></div><div class="mini r"><span>라쏘 λ (벌점 꼴)</span><b id="m8d">—</b></div></div>
+    <div class="insight" id="i8" aria-live="polite"></div>
+  </div>
+  <div class="assume"><b>이 단계의 가정</b> 둥근 오차 그릇(5단계 데이터). 라쏘를 실제로 푸는 방법(서브그래디언트, 좌표하강, 소프트 임계값)은 이 페이지 밖의 다음 단계로 남겨 둔다.</div>
+  <div class="docsum"><b>박사의 정리</b><div data-dlg="s8end"></div></div>
+  <div class="rv" data-rv="8" id="rv8"></div>
+  <div class="quiz" data-quiz="q8"></div>
+</div></section>
+
+<!-- 대결 -->
+<section class="sec" id="duel" aria-labelledby="h-duel"><div class="wrap">
+  <h2 id="h-duel">대결 — 내려간 뒤 잘라 붙이면 될까?</h2>
+  <div data-dlg="duelpre"></div>
+  <p class="lead">이번 그릇은 길쭉합니다: 오차 = (w₁ − 2)² + 10(w₂ − 1)², 울타리는 반지름 1인 원. 주판봇은 "울타리를 무시하고 바닥 (2, 1)까지 간 다음, 원 위로 잘라 붙이면 된다"고 하고, 초파리 연구원은 "등고선이 원에 닿는 점을 찾아야 한다"고 합니다. 판정은 <b>울타리 안에서의 오차</b>(작을수록 좋음)입니다.</p>
+  <div class="duel">
+    <div class="side l"><div class="head"><img id="d-fly" data-mood="fly_magnify" alt="" aria-hidden="true"><div><b style="color:var(--c-fly)">초파리 연구원</b><br><span class="muted">등고선이 원에 닿는 점</span></div></div></div>
+    <div class="vs">VS</div>
+    <div class="side r"><div class="head"><img id="d-robo" data-mood="robo_coin" alt="" aria-hidden="true"><div><b style="color:var(--c-robo)">주판봇</b><br><span class="muted">바닥까지 간 뒤 잘라 붙이기</span></div></div></div>
+  </div>
+  <div class="panel">
+    <div class="ctrl"><div class="group"><span class="glabel">먼저 맞혀 보기</span><button class="bt" data-pred="fly" type="button" aria-pressed="false">초파리가 이길 것 같다</button><button class="bt" data-pred="robo" type="button" aria-pressed="false">주판봇이 이길 것 같다</button></div>
+      <div class="group"><button class="bt primary" data-go type="button">결과 보기</button><button class="bt" data-close type="button" hidden>다시 닫기</button></div></div>
+    <div class="duel-res" hidden>
+      <div class="cwrap tall"><canvas id="cvD" aria-label="길쭉한 오차 등고선, 원 울타리, 두 답"></canvas></div>
+      <div class="tblwrap"><table class="cmp"><thead><tr><th>방법</th><th>답 (w₁, w₂)</th><th>울타리 안?</th><th>오차</th></tr></thead><tbody id="d-tbl"></tbody></table></div>
+      <div class="resbars"><div class="resbar"><span style="color:var(--c-fly)">초파리 · 오차</span><div class="bar"><i id="d-bf" style="background:var(--c-fly)"></i></div><b id="d-vf">—</b></div>
+        <div class="resbar"><span style="color:var(--c-robo)">주판봇 · 오차</span><div class="bar"><i id="d-br" style="background:var(--c-robo)"></i></div><b id="d-vr">—</b></div></div>
+      <div id="d-say"></div>
+      <div class="score"><span id="d-score"></span><span id="d-pred"></span></div>
+    </div>
+  </div>
+  <div class="quiz" data-quiz="duel"></div>
+  <div class="rv" data-rv="9" id="rv9"></div>
+</div></section>
+
+<!-- 정리 -->
+<section class="sec" id="sum" aria-labelledby="h-sum"><div class="wrap">
+  <h2 id="h-sum">정리 — 두 현장, 하나의 그림</h2>
+  <div data-dlg="sum"></div>
+  <div class="tblwrap"><table class="cmp"><thead><tr><th></th><th>원 위의 x + y (2)</th><th>공장 (3·4)</th><th>릿지 회귀 (6·7)</th><th>라쏘 회귀 (8)</th></tr></thead><tbody>
+    <tr><td>좋게 할 것</td><td>x + y 크게</td><td>비용 작게</td><td>오차 작게</td><td>오차 작게</td></tr>
+    <tr><td>울타리</td><td>원 x² + y² = 1</td><td>생산량 16톤 (등량선)</td><td>w₁² + w₂² ≤ 1 (원)</td><td>|w₁| + |w₂| ≤ 1 (마름모)</td></tr>
+    <tr><td>답의 자리</td><td>직선이 원에 닿는 점</td><td>비용 직선이 등량선에 닿는 점</td><td>오차 등고선이 원에 닿는 점</td><td>대개 마름모의 모서리</td></tr>
+    <tr><td>답</td><td>(0.707, 0.707)</td><td>사람 11.3명 · 기계 5.7대</td><td>(0.949, 0.316)</td><td>(1, 0) — w₂ = 0</td></tr>
+    <tr><td>λ의 뜻</td><td>울타리를 넓히면 늘어나는 값 0.707</td><td>1톤 더의 비용 = 한계비용 7.07</td><td>울타리 값(반지름²)을 1단위 넓힐 때 줄어드는 오차의 비율 2.16</td><td>4 (미분 대신 부채꼴로 구함)</td></tr>
+    <tr><td>이 페이지의 방법</td><td>그대로 됨</td><td>그대로 됨</td><td>그대로 됨</td><td>다른 연장 필요</td></tr>
+  </tbody></table></div>
+  <div class="rvscore" id="rvScore" aria-live="polite"></div>
+  <div class="bridge gen"><b>수업에서 쓰는 법 (강의자용)</b> 50분 2차시 예시. 1차시: 3줄 요약 → 1·2단계(직선 밀기 시연) → 3·4단계(공장) → 복습 2·3을 학생이 직접 조건 바꾸기. 2차시: 5·6단계 → AI 판단 코너를 짝 토론 → 7·8단계 → 대결 예측 투표 → 복습 6·8·대결. 정리 표의 항목을 공란 없이 말로 채워 보게 하면 이해 확인이 됩니다. 숫자는 모두 설명용 예시입니다.</div>
+  <h3>용어 대응 카드</h3>
+  <div class="gloss">
+    <div><b>등고선</b> = 높이(목표 값)가 같은 점을 이은 선. 공장에서는 등비용선, 회귀에서는 오차 등고선.</div>
+    <div><b>그래디언트 ∇f</b> = 가장 가파르게 오르는 쪽 화살표. 등고선과 늘 직각.</div>
+    <div><b>울타리(제약)</b> = 지켜야 하는 조건. 등식(= 16톤)과 부등식(≤ 1)이 있다.</div>
+    <div><b>라그랑주 승수 λ</b> = 닿는 점에서 ∇목표 = λ∇울타리의 배율. 울타리를 한 단위 넓힐 때 목표가 바뀌는 양.</div>
+    <div><b>라그랑지안 ℒ</b> = 목표 − λ × 울타리 식. 편미분을 모두 0으로 놓으면 닿는 점의 식이 된다.</div>
+    <div><b>릿지</b> = 둥근 울타리 회귀 = 벌점 λ‖w‖² 회귀(볼록할 때).</div>
+    <div><b>라쏘</b> = 마름모 울타리 회귀. 모서리에 닿아 가중치를 정확히 0으로 만든다.</div>
+    <div><b>KKT 조건</b> = 부등식 울타리의 규칙. 닿으면 λ &gt; 0, 안 닿으면 λ = 0.</div>
+  </div>
+  <div class="next"><a href="https://adminmrobo.github.io/optimization_3d_map/first_step_2.html#s42"><b>← 최적화 첫걸음 ② 4.2</b><br>공장 식으로 푼 라그랑지안</a><a href="https://adminmrobo.github.io/optimization_3d_map/1_math_map.html#s6"><b>좌표축 위의 그릇 1편 ⑥ →</b><br>3D 곡면 위 울타리 따라 걷기</a><a href="https://adminmrobo.github.io/optimization_3d_map/"><b>목차</b></a></div>
+</div></section>
+
+<section class="sec" id="outro" aria-labelledby="h-outro"><div class="wrap">
+  <h2 id="h-outro">아웃트로</h2>
+  <div data-dlg="outro"></div>
+</div></section>
+</main>
+
+<footer><div class="wrap">
+  <h3>출처</h3>
+  <table><thead><tr><th>#</th><th>자료</th><th>이 페이지에서 쓴 곳</th></tr></thead><tbody>
+    <tr><td>[1]</td><td>Bussotti, P. (2003). On the Genesis of the Lagrange Multipliers. Journal of Optimization Theory and Applications, 117(3), 453–459.</td><td>2·4 — 라그랑주 승수법의 기원(라그랑주는 『해석역학』(1788)에서 이 방법을 썼다. 자세한 기원 논의는 이 논문 참조)</td></tr>
+    <tr><td>[2]</td><td>Hoerl, A. E., Kennard, R. W. (1970). Ridge Regression: Biased Estimation for Nonorthogonal Problems. Technometrics, 12(1), 55–67.</td><td>6·7 — 릿지 회귀</td></tr>
+    <tr><td>[3]</td><td>Tibshirani, R. (1996). Regression Shrinkage and Selection via the Lasso. Journal of the Royal Statistical Society: Series B, 58(1), 267–288.</td><td>8 — 라쏘와 가중치를 0으로 만드는 성질</td></tr>
+    <tr><td>[4]</td><td>matharium, 「Lagrange Multipliers」 인포그래픽 (사용자 제공 자료, 원 게시물 주소·게시일 미확인)</td><td>2 — 원 위의 x + y 예제의 발상. 그림은 새로 그림</td></tr>
+  </tbody></table>
+  <h3>예시값·설명용 모형인 것</h3>
+  <ul><li>그릇 x²/4 + y², 공장 생산함수 Q = 2√(LK)와 임금 5·사용료 10, 매장 네 곳의 데이터, 대결의 길쭉한 그릇 (w₁ − 2)² + 10(w₂ − 1)²과 그 결과 수치 모두</li><li>표지는 그림판 표지(픽셀아트 표지 지시문은 COVER_PROMPTS.md)</li></ul>
+  <p>숫자 검산: <code>node code/check_lagrange.js</code> (모든 "숫자로 한 번 해 보기"와 대결 결과).</p>
+  <p>캐릭터 이름·설정·그림은 저작권자 안상선의 허락 없이 사용할 수 없습니다.</p>
+  <p>글 · 안상선 ((주)M-Robo 대표) · <a href="https://adminmrobo.github.io/who_am_i/who_am_i.html">저자 소개</a> · <a href="https://adminmrobo.github.io/optimization_3d_map/">목차</a> · <a href="https://adminmrobo.github.io/optimization_3d_map/first_step_2.html">최적화 첫걸음 ②</a> · <a href="https://adminmrobo.github.io/optimization_3d_map/1_math_map.html">좌표축 위의 그릇 1편</a></p>
+</div></footer>
+
+<script>
+/*@@SPRITES@@*/
+/*@@SPRITES_EXTRA@@*/
+/*@@LAGMATH@@*/
+/*@@COMMON@@*/
+(function(){
+'use strict';
+var $=U.$,fmt=U.fmt,cssv=U.cssv,F=LG.fac;
+function V(cv,draw){var o={dirty:true};U.reg(cv,function(dt){if(o.dirty||dt===0){draw();o.dirty=false;}});return o;}
+function rng(id,vid,fv,cb){var r=$('#'+id);r.oninput=function(){$('#'+vid).textContent=fv(+r.value);cb(+r.value);};return +r.value;}
+function pt(w){return '('+fmt(w[0],3)+', '+fmt(w[1],3)+')';}
+
+/* ── 좌표평면: 가로·세로 같은 눈금 ── */
+function plane(cv,o){var R=U.setup(cv),g=R.g,w=R.w,h=R.h,m=28;U.grid24(g,w,h);
+  var s=Math.min((w-2*m)/(o.xr[1]-o.xr[0]),(h-2*m)/(o.yr[1]-o.yr[0])),cx=(o.xr[0]+o.xr[1])/2,cy=(o.yr[0]+o.yr[1])/2;
+  var X=function(v){return w/2+(v-cx)*s;},Y=function(v){return h/2-(v-cy)*s;};
+  var x0=cx-(w/2-6)/s,x1=cx+(w/2-6)/s,y0=cy-(h/2-6)/s,y1=cy+(h/2-6)/s,st=o.step||1;
+  g.strokeStyle='rgba(22,33,43,.35)';g.lineWidth=1.2;g.beginPath();if(y0<0&&y1>0){g.moveTo(X(x0),Y(0));g.lineTo(X(x1),Y(0));}if(x0<0&&x1>0){g.moveTo(X(0),Y(y0));g.lineTo(X(0),Y(y1));}g.stroke();
+  g.fillStyle=cssv('--muted');g.font='11px '+cssv('--font');g.textAlign='center';
+  for(var t=Math.ceil(x0/st)*st;t<=x1;t+=st){if(Math.abs(t)<1e-9)continue;var ay=(y0<0&&y1>0)?Y(0):h-8;g.fillRect(X(t),ay-2,1,4);g.fillText(String(+t.toFixed(2)),X(t),Math.min(h-4,ay+14));}
+  g.textAlign='right';for(t=Math.ceil(y0/st)*st;t<=y1;t+=st){if(Math.abs(t)<1e-9)continue;var ax=(x0<0&&x1>0)?X(0):24;g.fillRect(ax-2,Y(t),4,1);g.fillText(String(+t.toFixed(2)),ax-5,Y(t)+4);}
+  if(o.xl)U.label(g,w-8,(y0<0&&y1>0?Y(0):h-10)-12,o.xl,cssv('--eye'),'right');if(o.yl)U.label(g,(x0<0&&x1>0?X(0):30)+8,14,o.yl,cssv('--terrain'));
+  var P={g:g,w:w,h:h,X:X,Y:Y,s:s};
+  P.poly=function(pts,col,wd,dash,close){g.strokeStyle=col;g.lineWidth=wd||2;g.setLineDash(dash||[]);g.beginPath();pts.forEach(function(p,i){i?g.lineTo(X(p[0]),Y(p[1])):g.moveTo(X(p[0]),Y(p[1]));});if(close)g.closePath();g.stroke();g.setLineDash([]);};
+  P.fill=function(pts,col){g.beginPath();pts.forEach(function(p,i){i?g.lineTo(X(p[0]),Y(p[1])):g.moveTo(X(p[0]),Y(p[1]));});g.closePath();g.fillStyle=col;g.fill();};
+  P.dot=function(x,y,col,r,ring){g.beginPath();g.arc(X(x),Y(y),r||5,0,7);g.fillStyle=col;g.fill();if(ring!==false){g.lineWidth=1.6;g.strokeStyle='#fff';g.stroke();}};
+  P.arrow=function(x,y,dx,dy,col,wd){U.arrow2(g,X(x),Y(y),X(x+dx),Y(y+dy),col,wd||2.4);};
+  P.lab=function(x,y,t,col,dx,dy,al){U.label(g,X(x)+(dx||8),Y(y)+(dy||-10),t,col,al);};
+  if(o.stamp)U.stamp(g,w,o.stamp);if(o.aria)cv.setAttribute('aria-label',o.aria);return P;}
+function ellipse(cx,cy,a,b){var o=[];for(var i=0;i<=140;i++){var t=2*Math.PI*i/140;o.push([cx+a*Math.cos(t),cy+b*Math.sin(t)]);}return o;}
+var CIRC=ellipse(0,0,1,1);
+
+/* ── 대사 ── */
+var DLG={
+ hero:[["doc","doc_front","오늘은 하루가 발표하는 날입니다. 시아와 모아가 묻고, 하루가 답해요. 주제는 \"울타리가 있을 때 가장 좋은 점 찾기\"입니다. 막히면 초파리와 주판봇이 도와줄 거예요."],
+       ["asst","asst_tremble","제, 제가요? 라그랑주 승수를요…? 아직 마음의 준비가…"],
+       ["x1","x1_worry","(…!)"],
+       ["sia","sia_explain","선배, 천천히 하셔도 돼요. 질문은 여덟 개, 쉬운 것부터 갈게요."],
+       ["moa","moa_cheer","공장 질문도 회귀 질문도 있어요! 저희도 잘 몰라서 묻는 거예요."]],
+ s1:[["sia","sia_think","하루 선배, 첫 질문이에요. 등고선 지도에서 기울기 화살표는 왜 늘 등고선이랑 직각이에요?"],
+     ["asst","asst_nervous","어, 그, 그게… 원래 그렇다고 배웠는데…"],
+     ["x2","x2_worry","(조마조마)"],
+     ["fly","fly_point","\"점 옮기기\" 슬라이더를 움직여 봐. 화살표와 등고선 사이 각도 숫자를 보면 돼."],
+     ["asst","asst_report","아, 늘 90°예요! 등고선을 따라가면 높이가 안 변하니까, 가장 빨리 오르는 쪽은 그 선과 직각일 수밖에 없어요."]],
+ s1end:[["doc","doc_board","정리합니다. 화살표(기울기)는 가장 가파른 오르막, 등고선은 높이가 같은 길이라서 둘은 늘 직각입니다. 오늘 여덟 질문의 열쇠가 바로 이 직각 하나예요. 지도에서 \"높이가 안 변하는 방향\"을 찾는 습관을 들이면 됩니다."]],
+ s2:[["moa","moa_think","선배, 동그란 울타리 x² + y² = 1 위에서만 걸어야 할 때, x + y가 가장 큰 곳은 어디예요?"],
+     ["asst","asst_sweat","울, 울타리요…? 미분해서 0으로 놓으면… 어, 0이 안 되는데…"],
+     ["x3","x3_dizzy","(빙글빙글)"]],
+ s2talk:[["robo","robo_calc","x + y를 미분하면 기울기가 1이니까 0이 될 수 없어. 답이 없다! 계산 끝."],
+         ["fly","fly_magnify","울타리를 빼고 계산했으니까 그렇지. \"직선 높이 c\"를 올려서 원에 마지막으로 닿는 순간을 찾아봐."],
+         ["asst","asst_spark","닿는 순간이 c = 1.414, 점은 (0.707, 0.707)! 그 점에서 화살표 두 개가 한 직선 위에 있어요."]],
+ s2end:[["doc","doc_board","세 가지 길이 같은 답을 냈죠. 각도로 바꿔 1변수 미분을 해도, 직선을 밀어도, 화살표를 맞춰도 (0.707, 0.707)입니다. 그리고 λ = 0.707은 \"울타리를 0.01 넓히면 가장 큰 값이 약 0.007 커진다\"는 뜻이에요. 이 숫자가 업무에서 \"조건 하나의 값어치\"가 됩니다."]],
+ s3:[["moa","moa_report","이번엔 공장 질문이에요. 16톤을 꼭 만들어야 하면, 사람 몇 명·기계 몇 대가 가장 싸요?"],
+     ["asst","asst_nervous","이번엔 울타리가 원이 아니라 휜 곡선이네… 그리고 직선은 비용이고…"],
+     ["x1","x1_worry","(두근두근)"]],
+ s3talk:[["robo","robo_coin","사람 임금이 기계 사용료의 반이야. 그러니 사람만 잔뜩 쓰면 가장 싸지!"],
+         ["fly","fly_point","\"쓸 돈 C\"를 줄여서 직선을 안쪽으로 당겨 봐. 곡선에 딱 한 점에서 닿을 때 멈추면 돼."],
+         ["asst","asst_report","113.14만 원에서 딱 닿아요! 사람 11.3명, 기계 5.7대. 사람만 쓰면 곡선을 못 만나요."]],
+ s3end:[["doc","doc_board","2단계와 같은 그림입니다. 역할만 바뀌었어요: 목표의 등고선이 직선, 울타리가 곡선. 그래서 \"가장 싼 조합\"은 눈으로 닿는 점을 찾는 문제가 됩니다. 주판봇 말처럼 싼 쪽만 늘리면 생산이 잘 늘지 않는다는 것도 그림이 보여 줬죠."]],
+ s4:[["sia","sia_think","선배, 그 점에서 왜 하필 \"만 원당 생산\"이 사람과 기계에서 같아져요? 그리고 λ는 그냥 계산용 숫자 아니에요?"],
+     ["asst","asst_sweat","λ, λ는… 어디서 봤는데…"],
+     ["x2","x2_dizzy","(…)"]],
+ s4talk:[["robo","robo_calc","λ는 계산을 맞추려고 넣는 보조 숫자야. 뜻 같은 건 없지."],
+         ["fly","fly_magnify","\"17톤으로 올려 보기\"를 눌러 비용이 얼마 느는지 재 봐. λ와 견줘 보고."],
+         ["asst","asst_spark","7.07만 원 늘어요! λ = 7.07이랑 똑같아요. λ는 1톤 더 만드는 비용, 한계비용이에요."]],
+ s4end:[["doc","doc_judge","그림의 \"닿는 점\"을 식으로 쓰면 \"만 원당 생산이 같다\"가 되고, 그때의 λ는 한계비용입니다. 견적에서 1톤 더를 요청받으면 7.07만 원보다 싸게 받으면 손해라는 뜻이죠. 여기서는 단순하게 등식 울타리 하나만 봤어요."]],
+ s5:[["sia","sia_explain","이제 인공지능 질문이에요. 매장 네 곳 데이터로 광고·할인 효과를 맞히는 모델은 어떻게 배워요?"],
+     ["asst","asst_firm","이건 첫걸음 ②에서 해 봤어요! 경사하강이에요. 그릇 바닥을 향해 한 걸음씩."],
+     ["x3","x3_cheer","(반짝)"]],
+ s5talk:[["robo","robo_happy","학습률은 클수록 빨리 내려가지! 1.05로 가자."],
+         ["fly","fly_point","학습률 1.05로 \"끝까지 걷기\"를 눌러 봐. 그다음 0.1로도."],
+         ["asst","asst_report","1.05면 바닥을 넘어 점점 멀어져요. 0.1이면 30걸음에 (3, 1) 근처예요."]],
+ s5end:[["doc","doc_board","회귀도 그릇이고, 경사하강은 바닥을 찾는 걸음입니다. 그런데 이 문제에는 울타리가 없었어요. 바닥에서 기울기가 0이 되고 끝납니다. 그럼 라그랑주 승수는 어디 있을까요? 모아가 바로 그걸 물을 거예요."]],
+ s6:[["moa","moa_think","선배, 방금 회귀엔 울타리가 없었잖아요. 그럼 회귀에서는 라그랑주 승수를 어떻게 봐요?"],
+     ["asst","asst_tremble","윽… 그러네요. 울타리가 없으면 λ도 없는데…"],
+     ["x1","x1_gasp","(헉)"],["x2","x2_worry","(…)"]],
+ s6talk:[["fly","fly_arms","그래서 가중치에 울타리를 치는 회귀, 릿지를 쓰는 거야. \"울타리 반지름\"을 1에서 4까지 밀어 봐."],
+         ["robo","robo_coin","울타리를 넓히면 λ도 커지겠지. 넓을수록 좋은 거니까!"],
+         ["asst","asst_report","아니에요, 거꾸로예요! 반지름이 3.16을 넘으면 바닥이 울타리 안에 들어와서 λ = 0이에요. 보통 회귀는 λ = 0인 릿지였어요."]],
+ s6end:[["doc","doc_judge","보통 회귀에는 울타리가 없으니 λ가 나올 자리가 없습니다. 릿지는 둥글고 매끄러운 울타리라서 2단계의 \"화살표 나란히\"가 그대로 통하고요. 업무에서는 λ = 2.16을 \"가중치 한도(반지름²)를 0.01 풀면 오차가 약 0.02 줄어든다\"로 읽으면 됩니다. 여기서 한 번 멈춰도 괜찮아요. 울타리가 닿느냐 안 닿느냐, 그것만 기억하면 됩니다."]],
+ s7:[["sia","sia_think","울타리 안에서 경사하강은 어떻게 해요? 걷다가 울타리 밖으로 나가면요?"],
+     ["asst","asst_nervous","두 가지 길이 있다고 들었는데… 같은 데로 가는지는…"]],
+ s7talk:[["robo","robo_meh","되돌리는 것과 벌점을 매기는 건 완전히 다른 방법이야. 답도 다르겠지."],
+         ["fly","fly_point","\"둘 다\"를 고르고 \"걷기 시작\"을 눌러. 두 길이 어디서 멈추는지 봐."],
+         ["asst","asst_spark","둘 다 (0.949, 0.316)에서 멈춰요! 길은 달라도 같은 점이에요."]],
+ s7end:[["doc","doc_board","릿지를 \"울타리 꼴\"로 써도, \"벌점 꼴\"로 써도 볼록한 그릇에서는 같은 답이 나옵니다. 실무 프로그램이 벌점 꼴(λ를 정하는 방식)을 쓰는 이유는 걸음마다 울타리를 검사하지 않아도 되기 때문이에요. 단, 그릇이 볼록하지 않으면 두 꼴이 갈릴 수 있다는 것도 기억해 두세요."]],
+ s8:[["moa","moa_think","마지막 질문이에요. 라쏘도 가중치 울타리잖아요. 라쏘도 같은 방법으로 풀어요?"],
+     ["asst","asst_flail","라, 라쏘는… 모서리가… 그러니까…"],
+     ["x1","x1_dizzy","(…!)"],["x3","x3_worry","(꼴깍)"]],
+ s8talk:[["robo","robo_coin","뾰족해서 미분이 안 되는 곳이 있으면 쓸모없는 방법이지. 라쏘는 탈락!"],
+         ["fly","fly_magnify","\"울타리 크기 t\"를 2보다 작게 해 봐. 라쏘의 w₂가 어떻게 되는지 보고, 원(릿지)도 같이 켜."],
+         ["asst","asst_report","w₂가 정확히 0이에요! 마름모는 모서리에 닿고, 원은 옆면에 닿아요. 모서리라서 미분은 안 되지만, 그 덕분에 특성 하나를 지워요."]],
+ s8end:[["doc","doc_judge","라쏘가 나쁜 게 아니라, 이 페이지의 연장으로는 안 풀리는 것입니다. 모서리에서는 화살표 두 개를 맞추는 대신 \"화살표가 부채꼴 안에 들어오나\"를 봐야 해요. 그 연장(서브그래디언트)은 다음 단계에서 다룹니다. 업무에서는 \"특성을 줄이고 싶으면 라쏘, 모두 조금씩 줄이고 싶으면 릿지\"로 기억하면 됩니다."]],
+ duelpre:[["sia","sia_signal","질문 여덟 개 끝! 마지막은 대결이에요. 하루 선배는 쉬세요."],["asst","asst_shy","휴… 무릎이 아직 떨려요."],["x2","x2_relief","(휴—)"]],
+ sum:[["doc","doc_magic","세 현장을 한 표로 모았습니다. 원, 공장, 릿지는 같은 방법으로 풀리고, 라쏘만 다른 연장이 필요해요."]],
+ outro:[["doc","doc_magic","오늘의 세 줄입니다.<br>① 울타리가 있으면, 등고선이 울타리에 닿는 점이 답이다 — 그 점에서 두 화살표가 나란하다.<br>② 그 배율 λ는 \"울타리 한 단위의 값어치\": 공장에서는 한계비용, 릿지에서는 오차를 줄이는 값.<br>③ 보통 회귀는 λ = 0인 릿지, 라쏘는 모서리라서 다른 연장이 필요하다."],
+        ["asst","asst_proud","처음엔 무릎이 떨렸는데… 여덟 개 다 답했어요! 초파리 연구원, 주판봇, 고마워요."],
+        ["x1","x1_cheer","(짝짝짝)"],["x2","x2_relief","(반짝)"],["x3","x3_cheer","(휴— 짝짝)"],
+        ["fly","fly_arms","닿는 점만 찾으면 돼. 눈으로 먼저, 식은 그다음."],
+        ["robo","robo_blush","잘라 붙이기는 둥근 그릇에서만 통하는 꼼수였네… 다음엔 등고선부터 그릴게."],
+        ["moa","moa_sparkle","선배 설명이 제일 쉬웠어요!"],["sia","sia_proud","다음 발표도 기대할게요."]]
+};
+U.dialogues(DLG);
+var CAST=[["doc","doc_front","박사","정리와 판정."],["asst","asst_nervous","조수 하루","오늘의 발표자. 많이 떨려요."],["sia","sia_think","인턴 시아","질문 담당 ①. 순서대로 묻는다."],["moa","moa_think","인턴 모아","질문 담당 ②. 공장과 라쏘가 궁금하다."],["fly","fly_magnify","초파리 연구원","의심하는 쪽. \"이걸 눌러 봐\"로 돕는다."],["robo","robo_coin","주판봇","확신하는 쪽. 빠르지만 가끔 성급하다."]];
+$('#castgrid').innerHTML=CAST.map(function(c){return '<div class="castc" style="--cc:var(--c-'+c[0]+')"><img src="'+U.spr(c[1])+'" alt="" aria-hidden="true"><div><b>'+c[2]+'</b><p>'+c[3]+'</p></div></div>';}).join('');
+U.fillImgs();
+
+/* 하루의 긴장도: 읽어 내려갈수록 풀린다 */
+(function(){var marks=[['s1',85,'asst_nervous'],['s2',80,'asst_sweat'],['s3',70,'asst_nervous'],['s4',62,'asst_sweat'],['s5',45,'asst_firm'],['s6',55,'asst_tremble'],['s7',38,'asst_nervous'],['s8',48,'asst_flail'],['duel',15,'asst_shy'],['outro',4,'asst_proud']],last='';
+  var bar=$('#haruMeter'),img=$('#haruMeterImg'),tx=$('#haruMeterTx');
+  function upd(){var y=window.innerHeight*0.4,cur=null;marks.forEach(function(m){var el=document.getElementById(m[0]);if(el&&el.getBoundingClientRect().top<y)cur=m;});
+    var v=cur?cur[1]:92,k=cur?cur[2]:'asst_tremble';bar.style.width=v+'%';tx.textContent='하루의 긴장도 '+v+'%';if(k!==last){U.setMood(img,k);last=k;}}
+  window.addEventListener('scroll',upd,{passive:true});upd();})();
+
+/* ── 숫자 요약 ── */
+$('#k-c').textContent=fmt(LG.circ.lam,3);$('#k-f').textContent=fmt(F.costMin(16).lam,2)+'만 원';$('#k-r').textContent=fmt(LG.ridge(1).lam,2);$('#k-l').textContent=fmt(LG.lasso(1).w[1],0);
+
+/* ── 표지 그림판 ── */
+(function(){var cv=$('#coverCv');U.reg(cv,function(dt){if(dt!==0)return;var P=plane(cv,{xr:[-1.6,4.2],yr:[-1.4,2.2],step:1});
+  [0.6,1.4,2.4,3.4,4.4].forEach(function(r,i){P.poly(ellipse(3,1,r,r),U.cmap(0.15+i*0.15,0.55),2);});
+  P.fill([[1,0],[0,1],[-1,0],[0,-1]],'rgba(214,69,58,.08)');P.poly([[1,0],[0,1],[-1,0],[0,-1]],cssv('--eye'),2.4,[6,4],true);P.poly(CIRC,cssv('--terrain'),2.6);
+  var r=LG.ridge(1).w;P.dot(r[0],r[1],'#f1b646',9);P.dot(1,0,cssv('--eye'),7);P.dot(3,1,cssv('--gfp'),6);});})();
+
+/* ── 1 등고선과 화살표 ── */
+var p1=[1.6,0.8];
+var v1=V($('#cv1'),function(){var P=plane($('#cv1'),{xr:[-3.6,3.6],yr:[-1.9,1.9],step:1,xl:'x',yl:'y',stamp:'설명용 예시'}),B=LG.bowl;
+  [0.5,1,1.5,2,2.5,3].forEach(function(c,i){P.poly(ellipse(0,0,2*Math.sqrt(c),Math.sqrt(c)),U.cmap(0.15+i*0.14,0.7),1.6);});
+  var x=p1[0],y=p1[1],f=B.f(x,y),gv=B.grad(x,y),n=Math.hypot(gv[0],gv[1]);
+  if(f>1e-6){P.poly(ellipse(0,0,2*Math.sqrt(f),Math.sqrt(f)),cssv('--terrain'),2.8);
+    var t=[-gv[1]/n,gv[0]/n];P.poly([[x-t[0]*0.9,y-t[1]*0.9],[x+t[0]*0.9,y+t[1]*0.9]],'rgba(22,33,43,.55)',1.6,[5,4]);
+    P.arrow(x,y,gv[0]/n*0.85,gv[1]/n*0.85,cssv('--eye'),3);P.lab(x+gv[0]/n*0.85,y+gv[1]/n*0.85,'∇f',cssv('--eye'),6,-6);
+    var a=[x+t[0]*0.22,y+t[1]*0.22],b=[a[0]+gv[0]/n*0.22,a[1]+gv[1]/n*0.22],c=[x+gv[0]/n*0.22,y+gv[1]/n*0.22];P.poly([a,b,c],'rgba(22,33,43,.6)',1.2);}
+  P.dot(x,y,'#f1b646',6);P.dot(0,0,cssv('--gfp'),4,false);});
+function up1(){var B=LG.bowl,x=p1[0],y=p1[1],gv=B.grad(x,y),f=B.f(x,y),n=Math.hypot(gv[0],gv[1]);
+  $('#m1a').textContent=fmt(f,3);$('#m1b').textContent='('+fmt(gv[0],2)+', '+fmt(gv[1],2)+')';$('#m1d').textContent=fmt(n,3);
+  /* 등고선 접선 방향(타원 매개변수의 미분)과 화살표의 각도 */
+  var tv=[-2*y,x/2],ang=n<1e-9?NaN:Math.acos(Math.abs(tv[0]*gv[0]+tv[1]*gv[1])/(Math.hypot(tv[0],tv[1])*n))*180/Math.PI;$('#m1c').textContent=isFinite(ang)?fmt(ang,1)+'°':'—';
+  $('#eq1').innerHTML='∇f = (∂f/∂x, ∂f/∂y) = (x/2, 2y) = ('+fmt(x,1)+'/2, 2 × '+fmt(y,1)+') = <b>('+fmt(gv[0],2)+', '+fmt(gv[1],2)+')</b>';
+  U.ins($('#i1'),n<1e-9?[['a','바닥 (0, 0)에서는 화살표 길이가 0입니다. 어느 쪽도 오르막이 아닌, 기울기 0인 점이에요.']]:[['g','화살표(빨강)와 등고선의 접선(점선) 사이 각도는 언제나 90°입니다. 점을 어디로 옮겨도 마찬가지예요.'],['m','등고선은 높이 0.5 차이마다 그렸습니다. 선이 촘촘한 곳(바깥, 위아래)일수록 화살표가 깁니다. 같은 거리를 가도 높이가 많이 바뀌기 때문이에요.']]);v1.dirty=true;}
+rng('r1x','v1x',function(v){return v.toFixed(1);},function(v){p1[0]=v;up1();});rng('r1y','v1y',function(v){return v.toFixed(1);},function(v){p1[1]=v;up1();});up1();
+
+/* ── 2 원과 직선 ── */
+var c2=0.8,th2=10;
+var v2=V($('#cv2'),function(){var P=plane($('#cv2'),{xr:[-1.7,2.1],yr:[-1.5,1.9],step:1,xl:'x',yl:'y',stamp:'설명용 예시'}),C=LG.circ;
+  [-1,-0.5,0,0.5,1,1.5,2].forEach(function(c){P.poly([[c-3,3],[c+3,-3]],'rgba(43,108,176,.16)',1);});
+  P.poly(CIRC,cssv('--terrain'),2.6);P.lab(-0.71,-0.71,'울타리 x² + y² = 1',cssv('--terrain'),-6,18,'right');
+  var meet=C.meets(c2),col=meet===1?cssv('--stain'):meet===2?cssv('--amber'):cssv('--eye');P.poly([[c2-3,3],[c2+3,-3]],col,2.6,[7,4]);P.lab(c2/2+0.9,c2/2-0.9,'x + y = '+fmt(c2,2),col,6,6);
+  if(meet===2){var d=Math.sqrt(2-c2*c2)/2,m=c2/2;[[m+d,m-d],[m-d,m+d]].forEach(function(q){P.dot(q[0],q[1],cssv('--amber'),5);});}
+  var b=C.best;if(meet===1){P.arrow(b[0],b[1],0.78,0.78,cssv('--terrain'),6);P.arrow(b[0],b[1],0.55,0.55,cssv('--eye'),2.6);P.lab(b[0]+0.55,b[1]+0.55,'∇f = (1, 1)',cssv('--eye'),-8,-2,'right');P.lab(b[0]+0.78,b[1]+0.78,'∇g = (1.41, 1.41)',cssv('--terrain'),6,-4);}
+  P.dot(b[0],b[1],meet===1?cssv('--stain'):'rgba(22,33,43,.25)',meet===1?7:4);});
+var S2=new U.Surf3D($('#cv2c'),{f:function(x,y){return x+y;},xr:[-1.5,1.5],yr:[-1.5,1.5],n:16,axes:['x','y','x + y'],contours:false,yaw:-0.85,pitch:0.5,zoom:0.92,alpha:0.55,stamp:'설명용 예시'});
+S2.ov.push(function(g,S){var up=[],fl=[];for(var i=0;i<=90;i++){var t=2*Math.PI*i/90,x=Math.cos(t),y=Math.sin(t);up.push([x,y,x+y]);fl.push([x,y,S.zr[0]]);}S.line3(g,fl,'rgba(15,127,134,.55)',1.6,[4,3]);S.line3(g,up,cssv('--eye'),3);
+  var b=LG.circ.best,q=S.dot3(g,b[0],b[1],LG.circ.fmax,'#f1b646',7);U.label(g,q[0]+10,q[1]-12,'가장 높은 점 1.414',cssv('--stain'));S.line3(g,[[b[0],b[1],S.zr[0]],[b[0],b[1],LG.circ.fmax]],'rgba(22,33,43,.4)',1.2,[3,3]);});
+function up2(){var C=LG.circ,m=C.meets(c2);$('#m2a').textContent=m+'개';$('#m2b').textContent=pt(C.best);$('#m2c').textContent=fmt(Math.SQRT2/2,3);$('#m2d').textContent='+'+fmt(C.fmaxAt(1.01)-C.fmax,4);
+  U.ins($('#i2'),m===2?[['a','직선이 원을 두 번 자릅니다. 원 위에 x + y가 '+fmt(c2,2)+'보다 큰 점이 아직 있다는 뜻이에요. 직선을 더 올려 보세요.']]:m===1?[['g','직선이 원에 딱 한 점에서 닿았습니다(접함). 여기가 울타리 위에서 x + y가 가장 큰 점, (0.707, 0.707)이에요. 빨간 화살표 ∇f와 청록 화살표 ∇g가 한 직선 위에 있습니다.']]:[['r','직선이 원과 만나지 않습니다. 울타리 위에서는 x + y = '+fmt(c2,2)+'을 만들 수 없어요. 내려 보세요.']]);v2.dirty=true;}
+rng('r2c','v2c',function(v){return v.toFixed(2);},function(v){c2=v;up2();});$('#b2').onclick=function(){c2=Math.SQRT2;$('#r2c').value=1.41;$('#v2c').textContent='1.41';up2();};up2();
+var v2b=V($('#cv2b'),function(){var t=th2*Math.PI/180,C=LG.circ,f=C.ftheta(t),d=C.dftheta(t),pts=[];for(var i=0;i<=180;i++)pts.push([i,C.ftheta(i*Math.PI/180)]);
+  var P=U.plot($('#cv2b'),{xr:[0,180],yr:[-1.2,1.6],xt:[0,45,90,135,180],yt:[-1,0,1,1.414],yf:function(v){return v===1.414?'1.414':String(v);},xl:'각도 θ (도)',yl:'x + y = cos θ + sin θ',series:[{pts:pts,color:cssv('--terrain'),width:2.6}],vlines:[{x:45,color:cssv('--stain'),label:'θ = 45°',dash:[4,4]}],stamp:'설명용 예시'});
+  var k=d*Math.PI/180,x0=th2,x1=Math.max(0,th2-25),x2=Math.min(180,th2+25);P.g.strokeStyle=cssv('--eye');P.g.lineWidth=2;P.g.beginPath();P.g.moveTo(P.X(x1),P.Y(f+k*(x1-x0)));P.g.lineTo(P.X(x2),P.Y(f+k*(x2-x0)));P.g.stroke();
+  P.g.beginPath();P.g.arc(P.X(th2),P.Y(f),6,0,7);P.g.fillStyle='#f1b646';P.g.fill();});
+function up2b(){var t=th2*Math.PI/180,C=LG.circ,f=C.ftheta(t),d=C.dftheta(t);$('#eq2b').innerHTML='θ = '+th2+'°: 점 (cos θ, sin θ) = ('+fmt(Math.cos(t),3)+', '+fmt(Math.sin(t),3)+') · x + y = <b>'+fmt(f,3)+'</b> · 기울기 −sin θ + cos θ = <b>'+fmt(d,3)+'</b>'+(Math.abs(d)<0.02?' → 기울기 0, 가장 높은 곳!':'');v2b.dirty=true;}
+rng('r2t','v2t',function(v){return v+'°';},function(v){th2=v;up2b();});up2b();
+
+/* ── 3 공장 ── */
+var C3=160,Q3=16;
+function iso(q){var k=q*q/4,o=[];for(var i=0;i<=120;i++){var L=k/16+(30-k/16)*Math.pow(i/120,1.6);o.push([L,k/L]);}return o;}
+var v3=V($('#cv3'),function(){var P=plane($('#cv3'),{xr:[-1,31],yr:[-1,17],step:5,xl:'사람 L',yl:'기계 K',stamp:'설명용 예시'}),cm=F.costMin(Q3),d=C3-cm.C;
+  [80,100,120,140,180].forEach(function(c){P.poly([[0,c/10],[c/5,0]],'rgba(43,108,176,.14)',1);});
+  P.poly(iso(Q3),cssv('--terrain'),2.8);P.lab(26,Q3*Q3/4/26,Q3+'톤 등량선(울타리)',cssv('--terrain'),-4,-12,'right');
+  var col=Math.abs(d)<=0.6?cssv('--stain'):d<0?cssv('--eye'):cssv('--amber');P.poly([[0,C3/10],[C3/5,0]],col,2.6,[7,4]);P.lab(C3/5*0.15,C3/10*0.85,'비용 '+C3,col,8,-6);
+  if(Math.abs(d)<=0.6){P.arrow(cm.L,cm.K,1.6,3.2,cssv('--eye'),2.4);P.lab(cm.L+1.6,cm.K+3.2,'∇비용 (5, 10)',cssv('--eye'),4,-6);P.arrow(cm.L,cm.K,0.707*3.2,1.414*3.2,cssv('--terrain'),6);P.arrow(cm.L,cm.K,1.6,3.2,cssv('--eye'),2.4);P.lab(cm.L+2.26,cm.K+4.5,'∇생산 (0.71, 1.41)',cssv('--terrain'),6,-4);}
+  P.dot(cm.L,cm.K,Math.abs(d)<=0.6?cssv('--stain'):'rgba(22,33,43,.25)',Math.abs(d)<=0.6?7:4);});
+var S3=new U.Surf3D($('#cv3c'),{f:function(L,K){return 5*L+10*K;},xr:[0,30],yr:[0,16],n:16,axes:['사람 L','기계 K','비용'],contours:false,yaw:-0.6,pitch:0.5,zoom:0.92,alpha:0.5,stamp:'설명용 예시'});
+S3.ov.push(function(g,S){var k=Q3*Q3/4,up=[],fl=[];for(var i=0;i<=80;i++){var L=Math.max(k/16,1)+(30-Math.max(k/16,1))*Math.pow(i/80,1.6),K=k/L;if(K>16)continue;up.push([L,K,5*L+10*K]);fl.push([L,K,S.zr[0]]);}
+  S.line3(g,fl,'rgba(15,127,134,.6)',1.6,[4,3]);S.line3(g,up,cssv('--eye'),3);var cm=F.costMin(Q3),q=S.dot3(g,cm.L,cm.K,cm.C,'#f1b646',7);U.label(g,q[0]+10,q[1]+16,'등량선 위 가장 낮은 비용 '+fmt(cm.C,1),cssv('--stain'));});
+function up3(){var cm=F.costMin(Q3),d=C3-cm.C;$('#m3a').textContent=fmt(cm.C,2);$('#m3b').textContent=fmt(cm.L,2)+'명 · '+fmt(cm.K,2)+'대';$('#m3d').textContent=fmt(cm.lam,3);
+  $('#m3c').textContent=Math.abs(d)<=0.6?'딱 닿음':d<0?'안 만남':'두 번 자름';
+  U.ins($('#i3'),Math.abs(d)<=0.6?[['g','비용 직선이 '+Q3+'톤 등량선에 딱 한 점에서 닿았습니다. 이 점이 가장 싼 조합이에요. 빨간 화살표 ∇비용과 청록 화살표 ∇생산이 한 직선 위에 있습니다. 오른쪽 3D에서는 같은 점이 "울타리를 따라 걸을 때 가장 낮은 곳"이에요.']]:d<0?[['r','비용 직선이 등량선에 닿지 않습니다. '+C3+'만 원으로는 '+Q3+'톤을 만들 수 없어요. 돈을 늘려 보세요.']]:[['a','비용 직선이 등량선을 두 번 자릅니다. 돈이 남는다는 뜻이에요. 직선을 안쪽으로 당겨(돈을 줄여) 딱 닿는 곳을 찾아보세요.']]);v3.dirty=true;S3.dirty=true;}
+rng('r3c','v3c',String,function(v){C3=v;up3();});rng('r3q','v3q',function(v){return v+'톤';},function(v){Q3=v;S3.dirty=true;up3();});
+$('#b3').onclick=function(){C3=Math.round(F.costMin(Q3).C);$('#r3c').value=C3;$('#v3c').textContent=String(C3);up3();};up3();
+
+/* ── 4 등량선 따라 걷기 ── */
+var L4=20,q4=16;
+var v4=V($('#cv4'),function(){var k=q4*q4/4,pts=[];for(var L=4;L<=28.001;L+=0.2)pts.push([L,5*L+10*k/L]);var cm=F.costMin(q4);
+  var P=U.plot($('#cv4'),{xr:[4,28],yr:[100,200],xt:[4,8,12,16,20,24,28],yt:[100,120,140,160,180,200],xl:'등량선 위의 사람 수 L',yl:'비용 (만 원)',series:[{pts:pts,color:cssv('--terrain'),width:2.6,name:q4+'톤을 만드는 비용',ndy:-12}],vlines:[{x:cm.L,color:cssv('--stain'),label:'가장 싼 L = '+fmt(cm.L,2)}],stamp:'설명용 예시'});
+  P.g.beginPath();P.g.arc(P.X(L4),P.Y(5*L4+10*k/L4),6,0,7);P.g.fillStyle='#f1b646';P.g.fill();});
+function up4(){var k=q4*q4/4,K=k/L4,a=F.MPL(L4,K)/5,b=F.MPK(L4,K)/10,c=5*L4+10*K,cm=F.costMin(q4);
+  $('#m4a').textContent=fmt(K,2)+'대';$('#m4b').textContent=fmt(a,4);$('#m4c').textContent=fmt(b,4);$('#m4d').textContent=fmt(c,2);
+  $('#eq4').innerHTML='사람 만 원당 생산 √(K/L) ÷ 5 = <b>'+fmt(a,4)+'</b> · 기계 만 원당 생산 √(L/K) ÷ 10 = <b>'+fmt(b,4)+'</b>'+(q4===17?' · 17톤의 가장 싼 비용 '+fmt(cm.C,2)+' − 16톤 113.14 = <b>'+fmt(cm.C-F.costMin(16).C,3)+'</b> = λ':'');
+  U.ins($('#i4'),Math.abs(a-b)<0.002?[['g','사람과 기계의 만 원당 생산이 같아졌습니다. 여기가 비용 곡선의 바닥, 3단계의 "닿는 점"이에요. λ = 1 ÷ '+fmt(a,4)+' = '+fmt(1/a,3)+'.']]:a>b?[['a','지금은 사람 쪽 만 원당 생산이 더 큽니다. 기계에 쓰던 돈을 사람에게 옮기면 같은 16톤을 더 싸게 만들 수 있어요. 사람 수를 늘려 보세요.']]:[['a','지금은 기계 쪽 만 원당 생산이 더 큽니다. 사람에게 쓰던 돈을 기계로 옮기면 더 싸져요. 사람 수를 줄여 보세요.']]);v4.dirty=true;}
+rng('r4l','v4l',function(v){return v.toFixed(1)+'명';},function(v){L4=v;up4();});
+$('#b4').onclick=function(){q4=q4===16?17:16;this.textContent=q4===17?'16톤으로 되돌리기':'17톤으로 올려 보기';up4();};up4();
+
+/* ── 5 경사하강 ── */
+var E5=0.1,N5=0,START=[-1.5,2.5],tm5=null;
+function path5(){return LG.path({start:START,eta:E5,steps:30,mode:'free'});}
+var v5=V($('#cv5'),function(){var P=plane($('#cv5'),{xr:[-2.6,5.6],yr:[-1.6,4.2],step:1,xl:'w₁ (광고 효과)',yl:'w₂ (할인 효과)',stamp:'설명용 예시'});
+  [0.5,1,2,3,4,5].forEach(function(r,i){P.poly(ellipse(3,1,r,r),U.cmap(0.12+i*0.15,0.65),1.6);});P.dot(3,1,cssv('--gfp'),6);P.lab(3,1,'바닥 (3, 1)',cssv('--gfp'),10,16);
+  var pth=path5().slice(0,N5+1).map(function(p){return [U.clamp(p[0],-30,30),U.clamp(p[1],-30,30)];});P.poly(pth,'#f1b646',2.6);pth.forEach(function(p,i){P.dot(p[0],p[1],i===pth.length-1?cssv('--eye'):'#f1b646',i===pth.length-1?6:3.5,i===pth.length-1);});});
+function up5(){var p=path5()[N5];$('#m5a').textContent=N5;$('#m5b').textContent=pt(p);$('#m5c').textContent=fmt(LG.loss(p[0],p[1]),4);$('#m5d').textContent=fmt(Math.hypot(p[0]-3,p[1]-1),4);
+  var r=Math.abs(1-2*E5);U.ins($('#i5'),[[r<1?'g':'r','학습률 '+fmt(E5,2)+': 한 걸음마다 바닥까지 거리가 |1 − 2 × '+fmt(E5,2)+'| = '+fmt(r,2)+'배가 됩니다. '+(r<1?(E5>0.5?'1보다 작으니 지그재그로 넘나들며 다가가요.':'1보다 작으니 바닥에 다가가요.'):'1보다 크면 걸을 때마다 바닥에서 멀어집니다(발산).')],['m','이 그릇에는 울타리가 없습니다. 바닥에서 기울기가 0이 되면 끝 — λ가 나올 자리가 없어요.']]);v5.dirty=true;}
+function stop5(){if(tm5){clearInterval(tm5);tm5=null;}}
+rng('r5e','v5e',function(v){return v.toFixed(2);},function(v){E5=v;stop5();N5=0;up5();});
+$('#b5s').onclick=function(){stop5();N5=Math.min(30,N5+1);up5();};$('#b5r').onclick=function(){stop5();N5=0;up5();};
+$('#b5a').onclick=function(){stop5();if(U.reduce){N5=30;up5();return;}N5=0;tm5=setInterval(function(){N5++;up5();if(N5>=30)stop5();},90);};up5();
+
+/* ── 6 울타리 반지름 ── */
+var R6=1;
+var v6=V($('#cv6'),function(){var P=plane($('#cv6'),{xr:[-4.2,5.2],yr:[-4.2,4.4],step:1,xl:'w₁',yl:'w₂',stamp:'설명용 예시'}),r=LG.ridge(R6);
+  [0.5,1,2,3,4].forEach(function(q,i){P.poly(ellipse(3,1,q,q),U.cmap(0.12+i*0.17,0.55),1.4);});
+  P.fill(ellipse(0,0,R6,R6),'rgba(15,127,134,.08)');P.poly(ellipse(0,0,R6,R6),cssv('--terrain'),2.6);P.lab(-R6*0.71,-R6*0.71,'울타리 반지름 '+fmt(R6,2),cssv('--terrain'),-6,16,'right');
+  P.dot(3,1,cssv('--gfp'),5);P.lab(3,1,'바닥 (3, 1)',cssv('--gfp'),10,16);
+  if(r.touch){var L=Math.hypot(3-r.w[0],1-r.w[1]);P.poly(ellipse(3,1,L,L),'rgba(214,69,58,.7)',1.8,[5,4]);P.arrow(r.w[0],r.w[1],r.w[0]*0.5/R6,r.w[1]*0.5/R6,cssv('--terrain'),2);P.arrow(r.w[0],r.w[1],-(r.w[0]-3)/L*0.6,-(r.w[1]-1)/L*0.6,cssv('--eye'),2.4);}
+  P.dot(r.w[0],r.w[1],'#f1b646',7);});
+function up6(){var r=LG.ridge(R6);$('#m6a').textContent=pt(r.w);$('#m6b').textContent=fmt(r.loss,3);$('#m6c').textContent=fmt(r.lam,3);$('#m6d').textContent=r.touch?'닿음 → λ > 0':'안 닿음 → λ = 0';
+  U.ins($('#i6'),r.touch?[['a','바닥 (3, 1)이 울타리 밖입니다. 답은 오차 등고선(빨간 점선)이 원에 닿는 점 '+pt(r.w)+', λ = '+fmt(r.lam,3)+'. 울타리 값(반지름²)을 0.01 넓히면 오차가 약 '+fmt(r.lam*0.01,4)+' 줄어든다는 뜻이에요.'],['m','반지름을 3.16(= √10)보다 크게 하면 무슨 일이 생기는지 보세요.']]:[['g','바닥 (3, 1)이 울타리 안에 들어왔습니다. 울타리가 닿지 않으니 λ = 0, 답은 보통 회귀와 같아요. "보통 회귀 = λ가 0인 릿지"입니다.']]);v6.dirty=true;}
+rng('r6r','v6r',function(v){return v.toFixed(2);},function(v){R6=v;up6();});up6();
+
+/* ── 7 두 길 ── */
+var M7='both',K7=80,tm7=null,lam7=LG.ridge(1).lam;
+function paths7(){return {proj:LG.path({start:START,eta:0.1,steps:80,mode:'proj',R:1}),pen:LG.path({start:START,eta:0.1,steps:80,mode:'pen',lam:lam7})};}
+var v7=V($('#cv7'),function(){var P=plane($('#cv7'),{xr:[-2.2,3.8],yr:[-1.4,3.2],step:1,xl:'w₁',yl:'w₂',stamp:'설명용 예시'}),T=paths7(),r=LG.ridge(1);
+  [1,2,3,4].forEach(function(q,i){P.poly(ellipse(3,1,q,q),U.cmap(0.12+i*0.2,0.5),1.4);});P.poly(CIRC,cssv('--terrain'),2.6);P.dot(3,1,cssv('--gfp'),5);
+  if(M7!=='pen'){var a=T.proj.slice(0,K7+1);P.poly(a,cssv('--eye'),2.4);P.dot(a[a.length-1][0],a[a.length-1][1],cssv('--eye'),6);}
+  if(M7!=='proj'){var b=T.pen.slice(0,K7+1);P.poly(b,cssv('--info'),2.4,[6,4]);P.dot(b[b.length-1][0],b[b.length-1][1],cssv('--info'),5);}
+  P.dot(r.w[0],r.w[1],'#f1b646',4,false);P.lab(r.w[0],r.w[1],'(0.949, 0.316)',cssv('--stain'),10,14);P.dot(START[0],START[1],'rgba(22,33,43,.6)',4);P.lab(START[0],START[1],'출발',cssv('--muted'),8,-8);});
+var S7=new U.Surf3D($('#cv7c'),{f:LG.loss,xr:[-2,4],yr:[-1.5,3],n:22,axes:['w₁','w₂','오차'],yaw:-0.7,pitch:0.55,zoom:0.92,alpha:0.62,stamp:'설명용 예시'});
+S7.ov.push(function(g,S){var up=[];for(var i=0;i<=90;i++){var t=2*Math.PI*i/90,x=Math.cos(t),y=Math.sin(t);up.push([x,y,LG.loss(x,y)]);}S.line3(g,up,cssv('--terrain'),3);
+  var T=paths7();if(M7!=='pen')S.line3(g,T.proj.slice(0,K7+1).map(function(p){return [p[0],p[1],LG.loss(p[0],p[1])];}),cssv('--eye'),2.4);
+  if(M7!=='proj')S.line3(g,T.pen.slice(0,K7+1).map(function(p){return [p[0],p[1],LG.loss(p[0],p[1])];}),cssv('--info'),2.2,[5,3]);
+  var r=LG.ridge(1),q=S.dot3(g,r.w[0],r.w[1],r.loss,'#f1b646',6);U.label(g,q[0]+10,q[1]-12,'울타리 위 가장 낮은 점',cssv('--stain'));});
+function up7(){var T=paths7(),a=T.proj[K7],b=T.pen[K7];$('#m7a').textContent=pt(a);$('#m7b').textContent=pt(b);$('#m7c').textContent=fmt(Math.hypot(a[0]-b[0],a[1]-b[1]),4);$('#m7d').textContent=pt(LG.ridge(1).w);
+  U.ins($('#i7'),K7<80?[['m',K7+'걸음째… 빨간 실선 = ⓐ 되돌림, 파란 점선 = ⓑ 벌점(λ = '+fmt(lam7,3)+').']]:[['g','80걸음 뒤 두 길의 끝점 사이 거리가 '+fmt(Math.hypot(a[0]-b[0],a[1]-b[1]),4)+'입니다. 길은 달라도 같은 점 (0.949, 0.316)에 멈췄어요. 벌점 세기를 λ = √10 − 1로 맞췄기 때문입니다.'],['m','ⓐ는 원 밖으로 나갈 때마다 원 위로 끌려와 담장을 따라 미끄러지고, ⓑ는 처음부터 줄어든 그릇의 바닥으로 곧장 갑니다.']]);v7.dirty=true;S7.dirty=true;}
+U.btns($('#g7'),[['both','둘 다'],['proj','ⓐ 되돌림만'],['pen','ⓑ 벌점만']],'both',function(v){M7=v;up7();});
+$('#b7').onclick=function(){if(tm7)clearInterval(tm7);if(U.reduce){K7=80;up7();return;}K7=0;tm7=setInterval(function(){K7+=2;if(K7>=80){K7=80;clearInterval(tm7);tm7=null;}up7();},60);};up7();
+
+/* ── 8 라쏘 ── */
+var T8=1,SH8='both';
+var v8=V($('#cv8'),function(){var P=plane($('#cv8'),{xr:[-2.4,4.8],yr:[-2.4,3.4],step:1,xl:'w₁',yl:'w₂',stamp:'설명용 예시'}),l=LG.lasso(T8),r=LG.ridge(T8);
+  [0.5,1,2,3,4].forEach(function(q,i){P.poly(ellipse(3,1,q,q),U.cmap(0.12+i*0.17,0.5),1.4);});P.dot(3,1,cssv('--gfp'),5);
+  var D=[[T8,0],[0,T8],[-T8,0],[0,-T8]];P.fill(D,'rgba(214,69,58,.08)');P.poly(D,cssv('--eye'),2.6,[],true);
+  if(SH8!=='lasso'){P.poly(ellipse(0,0,T8,T8),cssv('--terrain'),2,[6,4]);if(r.touch)P.dot(r.w[0],r.w[1],cssv('--terrain'),6);}
+  if(l.loss>1e-9){var L=Math.sqrt(l.loss);P.poly(ellipse(3,1,L,L),'rgba(214,69,58,.55)',1.6,[4,4]);}
+  if(l.corner){var c=[T8,0];P.fill([c,[c[0]+0.9,0.9],[c[0]+0.9,-0.9]],'rgba(241,182,70,.22)');P.poly([c,[c[0]+0.9,0.9]],'#c7891a',1.6);P.poly([c,[c[0]+0.9,-0.9]],'#c7891a',1.6);
+    var gr=LG.grad(c[0],0),n=Math.hypot(gr[0],gr[1]);P.arrow(c[0],0,-gr[0]/n*0.85,-gr[1]/n*0.85,cssv('--stain'),2.6);P.lab(c[0]+0.85,0.42,'−∇오차',cssv('--stain'),4,-4);P.lab(c[0]+0.9,-0.9,'부채꼴',cssv('--amber'),4,10);}
+  P.dot(l.w[0],l.w[1],'#f1b646',7);P.lab(l.w[0],l.w[1],'라쏘',cssv('--stain'),-8,16,'right');});
+function up8(){var l=LG.lasso(T8),r=LG.ridge(T8);$('#m8a').textContent=pt(l.w);$('#m8b').textContent=pt(r.w);$('#m8c').textContent=l.w[1]===0?'0 (정확히)':fmt(l.w[1],3);$('#m8d').textContent=fmt(l.lam,3);
+  U.ins($('#i8'),l.corner?[['g','라쏘의 답이 마름모의 모서리 ('+fmt(T8,2)+', 0)에 붙었습니다. w₂가 정확히 0 — 할인(x₂) 특성을 지운 셈이에요. 같은 크기의 원(릿지)은 옆면 '+pt(r.w)+'에 닿아 w₂가 0이 되지 않습니다.'],['a','모서리에서는 울타리 화살표가 하나로 정해지지 않습니다. 대신 −∇오차(주황 화살표)가 두 면 방향 사이 부채꼴 안에 들어오면 최적입니다. 이것이 "다른 연장"이 필요한 이유예요.']]:l.lam>0?[['a','울타리 크기 '+fmt(T8,2)+': 라쏘의 답 '+pt(l.w)+'은 모서리가 아니라 마름모의 변에 있습니다. 변 위에서는 매끄러워 이 페이지의 방법이 통해요. 크기를 2보다 줄이면 모서리로 갑니다.']]:[['g','울타리가 바닥 (3, 1)을 품었습니다. 라쏘도 λ = 0, 보통 회귀와 같은 답이에요.']]);v8.dirty=true;}
+rng('r8t','v8t',function(v){return v.toFixed(2);},function(v){T8=v;up8();});U.btns($('#g8'),[['both','원(릿지)도 함께'],['lasso','마름모만']],'both',function(v){SH8=v;up8();});up8();
+
+/* ── 대결 ── */
+var DU=LG.duel;
+function drawD(){var P=plane($('#cvD'),{xr:[-1.6,3.2],yr:[-1.4,2.2],step:1,xl:'w₁',yl:'w₂',stamp:'설명용 예시'}),cl=DU.clip(),b=DU.best();
+  [0.5,1.5,2.36,4.28,7].forEach(function(k,i){P.poly(ellipse(2,1,Math.sqrt(k),Math.sqrt(k/10)),k===2.36?cssv('--eye'):k===4.28?cssv('--c-robo'):U.cmap(0.12+i*0.15,0.5),k===2.36||k===4.28?2:1.4,k===2.36||k===4.28?[5,4]:[]);});
+  P.poly(CIRC,cssv('--terrain'),2.6);P.dot(2,1,cssv('--gfp'),5);P.lab(2,1,'바닥 (2, 1)',cssv('--gfp'),10,-8);P.poly([[2,1],[cl[0],cl[1]]],'rgba(11,122,134,.6)',1.6,[3,3]);
+  P.dot(cl[0],cl[1],cssv('--c-robo'),7);P.lab(cl[0],cl[1],'주판봇 4.28',cssv('--c-robo'),10,16);P.dot(b.w[0],b.w[1],cssv('--c-fly'),7);P.lab(b.w[0],b.w[1],'초파리 2.36',cssv('--c-fly'),-10,-10,'right');}
+U.Duel({el:'#duel',run:function(){return {cl:DU.clip(),b:DU.best()};},show:function(r,pred){var lc=DU.f(r.cl[0],r.cl[1]),lb=r.b.loss;
+  $('#d-tbl').innerHTML='<tr><td>주판봇 · 바닥 (2, 1)까지 간 뒤 원 위로 잘라 붙이기</td><td>'+pt(r.cl)+'</td><td>예 (원 위)</td><td><b>'+fmt(lc,3)+'</b></td></tr><tr><td>초파리 · 등고선이 원에 닿는 점</td><td>'+pt(r.b.w)+'</td><td>예 (원 위)</td><td><b>'+fmt(lb,3)+'</b></td></tr>';
+  $('#d-bf').style.width=(lb/lc*100)+'%';$('#d-br').style.width='100%';$('#d-vf').textContent=fmt(lb,3);$('#d-vr').textContent=fmt(lc,3);var flyWin=lb<lc;drawD();
+  $('#d-say').innerHTML=U.say('doc','doc_verdict','판정합니다. 오차 초파리 '+fmt(lb,3)+', 주판봇 '+fmt(lc,3)+'. 둘 다 울타리 위에 있지만, 그릇이 길쭉하면 "바닥에서 가장 가까운 원 위의 점"과 "오차가 가장 작은 원 위의 점"이 다릅니다. 잘라 붙이기가 맞는 건 7단계처럼 그릇이 둥글 때뿐이에요. 등고선이 원에 닿는 점을 찾아야 합니다.')+U.say('robo','robo_sigh','바닥에서 가깝다고 오차가 작은 게 아니었네… 등고선부터 그릴게.',true)+U.say('asst','asst_spark','이건 저도 알겠어요! 닿는 점에서는 화살표 두 개가 나란해야 하니까요.')+U.say('x3','x3_cheer','(짝짝)',true);
+  U.fillImgs();$('#d-score').textContent='이번 판: '+(flyWin?'초파리 연구원 승 (F)':'주판봇 승 (R)');$('#d-pred').textContent=pred?('내 예상: '+(pred==='fly'?'초파리':'주판봇')+' → '+((pred==='fly')===flyWin?'맞힘':'빗나감')):'예상을 고르지 않았어요';
+  U.setMood($('#d-fly'),flyWin?'fly_arms':'fly_coffee');U.setMood($('#d-robo'),flyWin?'robo_sigh':'robo_happy');},
+ reset:function(){U.setMood($('#d-fly'),'fly_magnify');U.setMood($('#d-robo'),'robo_coin');}});
+window.addEventListener('resize',function(){var c=$('#cvD');if(c&&c.offsetParent)drawD();});
+
+/* ── 용어·퀴즈 ── */
+U.Gloss({
+ '등고선':['등고선','좌표평면','높이(목표 값)가 같은 점을 이은 선.'],
+ '그래디언트':['그래디언트 ∇f','미분','편미분을 모은 화살표. 가장 가파른 오르막을 가리키고 등고선과 직각.'],
+ '라그랑주 승수':['라그랑주 승수 λ','최적화','닿는 점에서 ∇목표 = λ∇울타리의 배율. 울타리를 한 단위 넓힐 때 목표가 바뀌는 양.'],
+ '라그랑지안':['라그랑지안 ℒ','최적화','목표 − λ × 울타리 식. 편미분을 모두 0으로 놓아 푼다.'],
+ '등량선':['등량선','경제','같은 생산량을 내는 사람·기계 조합을 이은 곡선.'],
+ '등비용선':['등비용선','경제','같은 비용이 드는 사람·기계 조합을 이은 직선.'],
+ '한계비용':['한계비용 (MC)','경제','한 단위 더 만들 때 늘어나는 비용.'],
+ '경사하강':['경사하강','학습','새 w = w − 학습률 × 기울기. 기울기 반대로 조금씩 걷기.'],
+ '학습률':['학습률','학습','경사하강의 보폭. 너무 크면 발산한다.'],
+ '릿지':['릿지 회귀','학습','가중치에 둥근 울타리(또는 벌점 λ‖w‖²)를 친 회귀.'],
+ '라쏘':['라쏘 회귀','학습','가중치에 마름모 울타리(|w₁| + |w₂| ≤ t)를 친 회귀. 가중치를 정확히 0으로 만들 수 있다.'],
+ 'KKT':['KKT 조건','최적화','부등식 울타리의 최적 조건. 닿으면 λ > 0, 안 닿으면 λ = 0.'],
+ '서브그래디언트':['서브그래디언트','최적화','뾰족한 점에서 기울기 하나 대신 쓰는 "기울기의 범위".']
+},['등고선','그래디언트','라그랑주 승수','라그랑지안','등량선','한계비용','경사하강','릿지','라쏘','KKT']);
+
+/* ══════════ 복습·시연 대시보드 ══════════
+   단계마다 조건(숫자)을 바꿔 같은 개념을 다시 풀어 본다. 미션은 학생이 조작한 뒤에만 판정한다. */
+var RV=LG.RV,RVS={},RVN={};
+function rvBox(n,o){var el=document.querySelector('[data-rv="'+n+'"]');RVN[n]=o.title;
+  var h='<div class="rv-h"><img class="rv-haru" data-mood="asst_nervous" alt="" aria-hidden="true"><div class="rv-t"><b>복습·시연 대시보드 '+(n==='9'?'· 대결':n)+'</b> — '+o.title+'<br><span class="muted">'+o.desc+'</span></div><span class="rv-x" aria-hidden="true"><img data-mood="x1_worry" alt=""><img data-mood="x2_worry" alt=""><img data-mood="x3_worry" alt=""></span></div>';
+  h+='<div class="cwrap tall"><canvas id="rvc'+n+'" aria-label="'+o.aria+'"></canvas></div><div class="ctrl"><div class="group">';
+  (o.sliders||[]).forEach(function(z){h+='<label class="glabel" for="'+z[0]+'">'+z[1]+'</label><input type="range" id="'+z[0]+'" min="'+z[2]+'" max="'+z[3]+'" step="'+z[4]+'" value="'+z[5]+'"><span class="val" id="'+z[0]+'v">'+z[5]+'</span>';});
+  h+='</div><div class="group">';
+  if(o.input)h+='<label class="glabel" for="rvi'+n+'">'+o.input+'</label><input class="num" type="number" step="0.01" inputmode="decimal" id="rvi'+n+'"><button class="bt" id="rvk'+n+'" type="button">확인</button>';
+  if(o.btn)h+='<button class="bt primary" id="rvb'+n+'" type="button">'+o.btn+'</button>';
+  if(!o.fixed)h+='<button class="bt" id="rvs'+n+'" type="button">조건 바꾸기</button>';
+  h+='<span class="rv-cond" id="rvd'+n+'"></span></div></div><div class="eq" id="rve'+n+'"></div><ol class="mis" id="rvm'+n+'">'+o.missions.map(function(t){return '<li><span class="st">아직</span>'+t+'</li>';}).join('')+'</ol>';
+  el.innerHTML=h;U.fillImgs();RVS[n]={done:o.missions.map(function(){return false;}),ever:o.missions.map(function(){return false;}),touched:false};}
+function rvMark(n){var S=RVS[n],box=document.querySelector('[data-rv="'+n+'"]'),k=S.done.filter(Boolean).length,m=S.done.length;
+  S.done.forEach(function(d,i){var li=$('#rvm'+n).children[i];li.classList.toggle('ok',d);li.querySelector('.st').textContent=d?'통과 ✓':'아직';});
+  U.setMood(box.querySelector('.rv-haru'),k===m?'asst_proud':k?'asst_firm':'asst_nervous');
+  [].forEach.call(box.querySelectorAll('.rv-x img'),function(im,j){U.setMood(im,'x'+(j+1)+(k===m?'_cheer':k?'_relief':'_worry'));});rvScore();}
+function rvHit(n,i,ok){var S=RVS[n];if(!S.touched||!ok||S.done[i])return;S.done[i]=true;S.ever[i]=true;rvMark(n);}
+function rvReset(n){RVS[n].touched=false;RVS[n].done=RVS[n].done.map(function(){return false;});rvMark(n);}
+function rvScore(){var a=0,t=0,li=[];Object.keys(RVS).forEach(function(k){var e=RVS[k].ever,c=e.filter(Boolean).length;a+=c;t+=e.length;li.push('<li>'+(k==='9'?'대결':k)+' '+RVN[k]+' — '+c+'/'+e.length+(c===e.length?' ✓':'')+'</li>');});
+  var el=$('#rvScore');if(el)el.innerHTML='<b>복습 미션 기록 '+a+'/'+t+'</b> <span class="muted">(조건을 바꿔도 한 번 통과한 미션은 기록에 남습니다. 저장하지 않으며 새로 고치면 지워집니다.)</span><ul>'+li.join('')+'</ul>';}
+function rvSlide(id,fv,cb){var r=$('#'+id);r.oninput=function(){$('#'+id+'v').textContent=fv(+r.value);cb(+r.value);};}
+function setSl(id,v,fv){$('#'+id).value=v;$('#'+id+'v').textContent=fv(v);}
+function deg(v){return Math.round(v)+'°';}
+
+/* 복습 1 — 화살표 방향 맞히기 (방향별 높이 변화) */
+(function(){var P1=[[2,1,0.9,40],[1.5,1,1,130],[2.5,0.8,0.8,250],[1,1.2,1.1,320]],i=0,th=0;
+  rvBox('1',{title:'가장 가파른 쪽과 높이가 안 변하는 쪽',desc:'다른 그릇, 다른 점에서 화살표를 직접 돌려 봅니다. 아래 숫자는 "그 방향으로 0.1 갈 때 높이 변화"입니다.',aria:'타원 등고선 위의 점과 직접 돌리는 화살표',
+    sliders:[['rv1a','화살표 방향',0,359,1,0]],missions:['높이가 가장 빨리 오르는 방향으로 화살표를 맞추기 (오차 6° 안)','높이가 변하지 않는 방향(등고선 방향)으로 맞추기 (오차 6° 안)']});
+  function pt(){var p=P1[i];return [p[0]*p[2]*Math.cos(p[3]*Math.PI/180),p[1]*p[2]*Math.sin(p[3]*Math.PI/180)];}
+  var v=V($('#rvc1'),function(){var p=P1[i],q=pt(),P=plane($('#rvc1'),{xr:[-3.2,3.2],yr:[-1.9,1.9],step:1,xl:'x',yl:'y',stamp:'복습 · 조건 '+(i+1)});
+    [0.3,0.6,1,1.5].forEach(function(r,k){P.poly(ellipse(0,0,p[0]*r,p[1]*r),U.cmap(0.15+k*0.18,0.6),1.4);});P.poly(ellipse(0,0,p[0]*p[2],p[1]*p[2]),cssv('--terrain'),2.6);
+    var u=[Math.cos(th*Math.PI/180),Math.sin(th*Math.PI/180)];P.arrow(q[0],q[1],u[0]*0.8,u[1]*0.8,'#c7891a',3);
+    if(RVS['1'].done[0]){var g=RV.grad(p[0],p[1],q[0],q[1]),n=Math.hypot(g[0],g[1]);P.arrow(q[0],q[1],g[0]/n*0.8,g[1]/n*0.8,cssv('--eye'),2);P.lab(q[0]+g[0]/n*0.8,q[1]+g[1]/n*0.8,'∇f',cssv('--eye'),6,-4);}
+    P.dot(q[0],q[1],'#f1b646',6);});
+  function up(){var p=P1[i],q=pt(),g=RV.grad(p[0],p[1],q[0],q[1]),u=[Math.cos(th*Math.PI/180),Math.sin(th*Math.PI/180)],d=(g[0]*u[0]+g[1]*u[1])*0.1,dir=RV.dirDeg(g);
+    $('#rvd1').textContent='그릇 x²/'+p[0]+'² + y²/'+p[1]+'², 점 ('+fmt(q[0],2)+', '+fmt(q[1],2)+')';
+    $('#rve1').innerHTML='이 방향으로 0.1 갈 때 높이 변화 ≈ ∇f · (방향) × 0.1 = <b>'+(d>=0?'+':'')+fmt(d,4)+'</b>'+(RVS['1'].done[0]?' · 가장 가파를 때 = |∇f| × 0.1 = '+fmt(Math.hypot(g[0],g[1])*0.1,4):'');
+    rvHit('1',0,RV.angGap(th,dir)<6);rvHit('1',1,RV.angGap(th,dir+90)<6||RV.angGap(th,dir-90)<6);v.dirty=true;}
+  rvSlide('rv1a',deg,function(x){th=x;RVS['1'].touched=true;up();});$('#rvs1').onclick=function(){i=(i+1)%P1.length;th=0;setSl('rv1a',0,deg);rvReset('1');up();};rvReset('1');up();})();
+
+/* 복습 2 — 다른 목표 a·x + b·y를 원 위에서 */
+(function(){var P2=[[2,1],[1,-1],[-1,2],[3,4]],i=0,th=200;
+  rvBox('2',{title:'목표를 바꿔 원 울타리 위의 가장 높은 점과 λ',desc:'목표 a·x + b·y가 바뀌면 닿는 점도 λ도 바뀝니다. 점을 원 위로 옮기며 두 화살표가 나란해지는 곳을 찾으세요.',aria:'원 위의 점, 목표 직선, 두 기울기 화살표',
+    sliders:[['rv2t','원 위의 점 (각도)',0,359,1,200]],input:'λ 값 입력',missions:['원 위에서 목표가 가장 큰 점 찾기 (오차 2° 안)','그 점의 λ를 계산해 입력하기 (오차 0.02 안)']});
+  var v=V($('#rvc2'),function(){var p=P2[i],t=th*Math.PI/180,q=[Math.cos(t),Math.sin(t)],c=p[0]*q[0]+p[1]*q[1],P=plane($('#rvc2'),{xr:[-1.8,1.8],yr:[-1.5,1.5],step:1,xl:'x',yl:'y',stamp:'복습 · 조건 '+(i+1)});
+    P.poly(CIRC,cssv('--terrain'),2.6);var n=Math.hypot(p[0],p[1]),dv=[-p[1]/n,p[0]/n],o=[p[0]*c/(n*n),p[1]*c/(n*n)];P.poly([[o[0]-dv[0]*3,o[1]-dv[1]*3],[o[0]+dv[0]*3,o[1]+dv[1]*3]],cssv('--amber'),2,[6,4]);
+    P.arrow(q[0],q[1],q[0]*0.75,q[1]*0.75,cssv('--terrain'),5);P.arrow(q[0],q[1],p[0]/n*0.6,p[1]/n*0.6,cssv('--eye'),2.4);P.lab(q[0]+p[0]/n*0.6,q[1]+p[1]/n*0.6,'∇f',cssv('--eye'),6,-4);P.dot(q[0],q[1],'#f1b646',6);});
+  function up(){var p=P2[i],t=th*Math.PI/180,q=[Math.cos(t),Math.sin(t)],b=RV.circBest(p[0],p[1]),ang=RV.angGap(th,RV.dirDeg(p));
+    $('#rvd2').textContent='목표 f = '+p[0]+'x '+(p[1]<0?'− '+(-p[1]):'+ '+p[1])+'y';
+    $('#rve2').innerHTML='f = <b>'+fmt(p[0]*q[0]+p[1]*q[1],3)+'</b> · ∇f = ('+p[0]+', '+p[1]+') · ∇g = (2x, 2y) = ('+fmt(2*q[0],2)+', '+fmt(2*q[1],2)+') · 두 화살표 사이 각도 <b>'+fmt(ang,1)+'°</b>'+(RVS['2'].done[0]?' → 나란함! λ = |∇f| ÷ |∇g| = √('+p[0]+'² + '+p[1]+'²) ÷ 2':'');
+    rvHit('2',0,RV.angGap(th,b.deg)<2);v.dirty=true;}
+  rvSlide('rv2t',deg,function(x){th=x;RVS['2'].touched=true;up();});
+  $('#rvk2').onclick=function(){RVS['2'].touched=true;var x=parseFloat($('#rvi2').value),b=RV.circBest(P2[i][0],P2[i][1]);rvHit('2',1,isFinite(x)&&Math.abs(x-b.lam)<0.02);if(!(isFinite(x)&&Math.abs(x-b.lam)<0.02))$('#rve2').innerHTML+=' · <span style="color:var(--eye)">입력한 λ가 아직 맞지 않아요. 가장 높은 점에서 |∇f| ÷ |∇g|를 계산해 보세요.</span>';};
+  $('#rvs2').onclick=function(){i=(i+1)%P2.length;th=200;setSl('rv2t',200,deg);$('#rvi2').value='';rvReset('2');up();};rvReset('2');up();})();
+
+/* 복습 3·4 — 임금·사용료·목표를 바꾼 공장 */
+var PF=[[4,16,16],[6,6,12],[8,2,20],[5,20,16]];
+function isoPts(q,Lmax){var k=q*q/4,o=[];for(var j=0;j<=160;j++){var L=Lmax*0.04+Lmax*0.96*j/160;o.push([L,k/L]);}return o;}
+(function(){var i=0,C=0;
+  rvBox('3',{title:'다른 공장에서 비용 직선을 등량선에 닿게 하기',desc:'임금 w, 기계 사용료 r, 목표 생산량이 바뀝니다. 같은 방법(직선을 당겨 딱 닿는 점)으로 가장 싼 조합을 찾으세요.',aria:'등량선과 비용 직선',
+    sliders:[['rv3c','쓸 돈 C (만 원)',10,300,0.5,100]],input:'그 점의 사람 수 L',missions:['비용 직선을 등량선에 딱 닿게 하기 (오차 0.6% 안)','닿는 점의 사람 수를 그림에서 읽어 입력하기 (오차 8% 안)']});
+  function cfg(){var p=PF[i],o=RV.fac(p[0],p[1],p[2]);return {p:p,o:o,Lm:Math.max(3*o.L,6),Km:Math.max(3*o.K,6)};}
+  var v=V($('#rvc3'),function(){var c=cfg(),p=c.p,line=[[0,C/p[1]],[C/p[0],0]];
+    var P=U.plot($('#rvc3'),{xr:[0,c.Lm],yr:[0,c.Km],xt:[0,c.Lm/2,c.Lm].map(function(x){return +x.toFixed(1);}),yt:[0,c.Km/2,c.Km].map(function(x){return +x.toFixed(1);}),xl:'사람 L',yl:'기계 K',
+      series:[{pts:isoPts(p[2],c.Lm).filter(function(q){return q[1]<=c.Km*1.05;}),color:cssv('--terrain'),width:2.6,name:p[2]+'톤 등량선'},{pts:line,color:cssv('--amber'),width:2.4,name:'비용 '+fmt(C,1)}],stamp:'복습 · 조건 '+(i+1)});
+    if(RVS['3'].done[0]){P.g.beginPath();P.g.arc(P.X(c.o.L),P.Y(c.o.K),7,0,7);P.g.fillStyle='#f1b646';P.g.fill();}});
+  function up(){var c=cfg(),d=(C-c.o.C)/c.o.C;$('#rvd3').textContent='임금 '+c.p[0]+' · 사용료 '+c.p[1]+' · 목표 '+c.p[2]+'톤';
+    $('#rve3').innerHTML='지금 비용 '+fmt(C,1)+'만 원 → '+(Math.abs(d)<=0.006?'<b>딱 닿음!</b> 가장 싼 비용 = 목표 × √(w·r) = '+fmt(c.o.C,2):d<0?'등량선과 안 만남 (돈이 모자람)':'등량선을 두 번 자름 (돈이 남음)');
+    rvHit('3',0,Math.abs(d)<=0.006);v.dirty=true;}
+  function init(){var c=cfg();var mn=Math.round(c.o.C*0.5),mx=Math.round(c.o.C*1.6);$('#rv3c').min=mn;$('#rv3c').max=mx;C=Math.round(c.o.C*1.35);setSl('rv3c',C,function(x){return fmt(x,1);});$('#rvi3').value='';rvReset('3');up();}
+  rvSlide('rv3c',function(x){return fmt(x,1);},function(x){C=x;RVS['3'].touched=true;up();});
+  $('#rvk3').onclick=function(){RVS['3'].touched=true;var x=parseFloat($('#rvi3').value),L=cfg().o.L,ok=isFinite(x)&&Math.abs(x-L)/L<0.08;rvHit('3',1,ok);if(!ok)$('#rve3').innerHTML+=' · <span style="color:var(--eye)">아직 달라요. 먼저 미션 1로 닿는 점을 찾고 가로축 값을 읽어 보세요.</span>';else $('#rve3').innerHTML+=' · 정확한 값 L* = '+fmt(L,2)+'명';};
+  $('#rvs3').onclick=function(){i=(i+1)%PF.length;init();};init();})();
+(function(){var i=1,L=0;
+  rvBox('4',{title:'만 원당 생산을 맞추고 λ를 예측하기',desc:'등량선 위를 걸으며 사람과 기계의 "만 원당 생산"이 같아지는 점을 찾고, 목표를 1 올릴 때 늘어나는 비용(λ)을 예측합니다.',aria:'등량선 위 사람 수에 따른 비용 곡선',
+    sliders:[['rv4l','등량선 위의 사람 수 L',1,50,0.05,10]],input:'λ 예측 (만 원)',missions:['사람과 기계의 만 원당 생산을 같게 맞추기 (오차 1% 안)','목표를 1 올릴 때 늘어나는 가장 싼 비용(λ)을 예측해 입력하기 (오차 2% 안)']});
+  function cfg(){var p=PF[i],o=RV.fac(p[0],p[1],p[2]);return {p:p,o:o,k:p[2]*p[2]/4,L0:o.L*0.3,L1:o.L*3};}
+  var v=V($('#rvc4'),function(){var c=cfg(),p=c.p,pts=[];for(var x=c.L0;x<=c.L1+1e-9;x+=(c.L1-c.L0)/160)pts.push([x,p[0]*x+p[1]*c.k/x]);var ys=pts.map(function(q){return q[1];}),y1=Math.min(Math.max.apply(null,ys),c.o.C*2.2);
+    var P=U.plot($('#rvc4'),{xr:[c.L0,c.L1],yr:[c.o.C*0.9,y1],xt:[c.L0,c.o.L,c.L1].map(function(x){return +x.toFixed(1);}),yt:[c.o.C*0.9,c.o.C,y1].map(function(x){return +x.toFixed(0);}),xl:'등량선 위의 사람 수 L',yl:'비용 (만 원)',
+      series:[{pts:pts.filter(function(q){return q[1]<=y1;}),color:cssv('--terrain'),width:2.6,name:p[2]+'톤을 만드는 비용'}],stamp:'복습 · 조건 '+(i+1)});
+    var y=p[0]*L+p[1]*c.k/L;if(y<=y1){P.g.beginPath();P.g.arc(P.X(L),P.Y(y),6,0,7);P.g.fillStyle='#f1b646';P.g.fill();}});
+  function up(){var c=cfg(),p=c.p,K=c.k/L,a=Math.sqrt(K/L)/p[0],b=Math.sqrt(L/K)/p[1];$('#rvd4').textContent='임금 '+p[0]+' · 사용료 '+p[1]+' · 목표 '+p[2]+'톤';
+    $('#rve4').innerHTML='기계 K = '+fmt(K,2)+'대 · 사람 만 원당 생산 <b>'+fmt(a,4)+'</b> · 기계 만 원당 생산 <b>'+fmt(b,4)+'</b> · 비용 '+fmt(p[0]*L+p[1]*K,2)+(Math.abs(a-b)/Math.max(a,b)<0.01?' → 같아졌어요! 1 ÷ 만 원당 생산 = '+fmt(1/a,3):'');
+    rvHit('4',0,Math.abs(a-b)/Math.max(a,b)<0.01);v.dirty=true;}
+  function init(){var c=cfg();$('#rv4l').min=c.L0.toFixed(2);$('#rv4l').max=c.L1.toFixed(2);L=+(c.L1*0.8).toFixed(2);setSl('rv4l',L,function(x){return fmt(x,2)+'명';});$('#rvi4').value='';rvReset('4');up();}
+  rvSlide('rv4l',function(x){return fmt(x,2)+'명';},function(x){L=x;RVS['4'].touched=true;up();});
+  $('#rvk4').onclick=function(){RVS['4'].touched=true;var c=cfg(),x=parseFloat($('#rvi4').value),ok=isFinite(x)&&Math.abs(x-c.o.lam)/c.o.lam<0.02;rvHit('4',1,ok);
+    var up1=RV.fac(c.p[0],c.p[1],c.p[2]+1).C-c.o.C;$('#rve4').innerHTML+=ok?' · 확인: 목표 '+(c.p[2]+1)+'톤의 가장 싼 비용 − '+c.p[2]+'톤 = <b>'+fmt(up1,3)+'</b> = √('+c.p[0]+' × '+c.p[1]+')':' · <span style="color:var(--eye)">아직 달라요. 만 원당 생산이 같아진 점에서 "1 ÷ 만 원당 생산"을 보세요.</span>';};
+  $('#rvs4').onclick=function(){i=(i+1)%PF.length;init();};init();})();
+
+/* 복습 5 — 다른 그릇, 다른 출발점에서 경사하강 */
+(function(){var P5=[[[2,-1],[-2,2]],[[-1,2],[2,-1.5]],[[1.5,1.5],[-2,-1]]],i=0,eta=0.1,path=null;
+  rvBox('5',{title:'학습률을 골라 8걸음 안에 바닥으로',desc:'바닥 위치와 출발점이 바뀝니다. 한 걸음마다 바닥까지 거리가 |1 − 2 × 학습률|배가 된다는 것을 떠올려 보세요.',aria:'둥근 그릇 등고선과 경사하강 경로',
+    sliders:[['rv5e','학습률',0.05,1.2,0.05,0.1]],btn:'8걸음 걷기',missions:['8걸음 안에 바닥까지 거리 0.05 안으로 들어가기','발산(걸을수록 바닥에서 멀어짐)을 직접 일으켜 관찰하기']});
+  var v=V($('#rvc5'),function(){var c=P5[i][0],s0=P5[i][1],P=plane($('#rvc5'),{xr:[-3.2,3.2],yr:[-2.6,3],step:1,xl:'w₁',yl:'w₂',stamp:'복습 · 조건 '+(i+1)});
+    [0.5,1,2,3].forEach(function(r,k){P.poly(ellipse(c[0],c[1],r,r),U.cmap(0.12+k*0.2,0.55),1.4);});P.dot(c[0],c[1],cssv('--gfp'),5);P.dot(s0[0],s0[1],'rgba(22,33,43,.6)',4);P.lab(s0[0],s0[1],'출발',cssv('--muted'),8,-8);
+    if(path){var q=path.map(function(p){return [U.clamp(p[0],-20,20),U.clamp(p[1],-20,20)];});P.poly(q,'#f1b646',2.4);q.forEach(function(p,k){P.dot(p[0],p[1],k===q.length-1?cssv('--eye'):'#f1b646',k===q.length-1?6:3.5,k===q.length-1);});}});
+  function up(){var c=P5[i][0],s0=P5[i][1];$('#rvd5').textContent='바닥 ('+c[0]+', '+c[1]+') · 출발 ('+s0[0]+', '+s0[1]+')';
+    var r=Math.abs(1-2*eta);$('#rve5').innerHTML='학습률 '+fmt(eta,2)+' → 한 걸음마다 거리 × <b>'+fmt(r,2)+'</b>'+(path?' · 8걸음 뒤 바닥까지 거리 <b>'+fmt(Math.hypot(path[8][0]-c[0],path[8][1]-c[1]),4)+'</b>':'');v.dirty=true;}
+  rvSlide('rv5e',function(x){return x.toFixed(2);},function(x){eta=x;path=null;up();});
+  $('#rvb5').onclick=function(){RVS['5'].touched=true;var c=P5[i][0],s0=P5[i][1];path=RV.gd(c,s0,eta,8);var d0=Math.hypot(s0[0]-c[0],s0[1]-c[1]),d8=Math.hypot(path[8][0]-c[0],path[8][1]-c[1]);rvHit('5',0,d8<0.05);rvHit('5',1,d8>d0);up();};
+  $('#rvs5').onclick=function(){i=(i+1)%P5.length;path=null;rvReset('5');up();};rvReset('5');up();})();
+
+/* 복습 6 — 다른 바닥에서 릿지 울타리 */
+(function(){var P6=[[2,2],[4,-1],[-3,1],[1,3]],i=0,R=0.5;
+  rvBox('6',{title:'바닥을 옮겨 놓고 울타리 반지름으로 λ 조절하기',desc:'오차 그릇의 바닥이 바뀝니다. 울타리가 닿으면 λ > 0, 안 닿으면 λ = 0이라는 규칙(KKT)을 반지름으로 확인합니다.',aria:'바닥이 바뀐 둥근 오차 등고선과 원 울타리',
+    sliders:[['rv6r','울타리 반지름',0.1,5,0.01,0.5]],missions:['λ가 정확히 1이 되는 반지름 찾기 (λ 오차 0.03 안)','λ가 0이 되는 가장 작은 반지름 찾기 (0.08 안)']});
+  var v=V($('#rvc6'),function(){var a=P6[i],r=RV.ridge(a,R),P=plane($('#rvc6'),{xr:[-5,5],yr:[-4,4],step:1,xl:'w₁',yl:'w₂',stamp:'복습 · 조건 '+(i+1)});
+    [1,2,3].forEach(function(q,k){P.poly(ellipse(a[0],a[1],q,q),U.cmap(0.12+k*0.22,0.5),1.4);});P.fill(ellipse(0,0,R,R),'rgba(15,127,134,.08)');P.poly(ellipse(0,0,R,R),cssv('--terrain'),2.6);
+    P.dot(a[0],a[1],cssv('--gfp'),5);P.lab(a[0],a[1],'바닥',cssv('--gfp'),10,-8);if(r.touch){var L=Math.hypot(a[0]-r.w[0],a[1]-r.w[1]);P.poly(ellipse(a[0],a[1],L,L),'rgba(214,69,58,.65)',1.6,[5,4]);}P.dot(r.w[0],r.w[1],'#f1b646',6);});
+  function up(){var a=P6[i],r=RV.ridge(a,R),n=Math.hypot(a[0],a[1]);$('#rvd6').textContent='바닥 ('+a[0]+', '+a[1]+')';
+    $('#rve6').innerHTML='답 ('+fmt(r.w[0],3)+', '+fmt(r.w[1],3)+') · λ = |바닥| ÷ 반지름 − 1 = <b>'+fmt(r.lam,3)+'</b> · '+(r.touch?'울타리가 닿음':'울타리가 안 닿음 (λ = 0)');
+    rvHit('6',0,Math.abs(r.lam-1)<0.03);rvHit('6',1,!r.touch&&R-n<0.08);v.dirty=true;}
+  rvSlide('rv6r',function(x){return x.toFixed(2);},function(x){R=x;RVS['6'].touched=true;up();});
+  $('#rvs6').onclick=function(){i=(i+1)%P6.length;R=0.5;setSl('rv6r',0.5,function(x){return x.toFixed(2);});rvReset('6');up();};rvReset('6');up();})();
+
+/* 복습 7 — 반지름이 바뀌면 벌점 세기 λ도 바뀐다 */
+(function(){var P7=[0.8,1.2,1.6,2],i=0,lam=0;
+  rvBox('7',{title:'벌점 세기를 골라 두 길을 같은 점에서 만나게 하기',desc:'울타리 반지름이 바뀝니다. ⓐ 되돌림 경사하강의 끝점(빨강)에 ⓑ 벌점 경사하강의 끝점(파랑)이 오도록 벌점 세기 λ를 고르세요. 파란 점선은 λ를 바꿀 때 ⓑ 끝점이 지나는 길입니다.',aria:'원 울타리, 두 길의 끝점, 벌점 세기에 따른 끝점의 길',
+    sliders:[['rv7l','벌점 세기 λ',0,4,0.01,0]],missions:['두 끝점 사이 거리를 0.02 안으로 맞추기']});
+  var v=V($('#rvc7'),function(){var R=P7[i],t=RV.two([3,1],R,lam,300),P=plane($('#rvc7'),{xr:[-2.4,3.6],yr:[-1.4,2.4],step:1,xl:'w₁',yl:'w₂',stamp:'복습 · 조건 '+(i+1)});
+    [1,2,3].forEach(function(q,k){P.poly(ellipse(3,1,q,q),U.cmap(0.12+k*0.22,0.5),1.4);});P.poly(ellipse(0,0,R,R),cssv('--terrain'),2.6);P.poly([[3,1],[0,0]],'rgba(43,108,176,.55)',1.6,[5,4]);P.dot(3,1,cssv('--gfp'),5);
+    P.dot(t.proj[0],t.proj[1],cssv('--eye'),7);P.dot(t.pen[0],t.pen[1],cssv('--info'),5);});
+  function up(){var R=P7[i],t=RV.two([3,1],R,lam,300),d=Math.hypot(t.proj[0]-t.pen[0],t.proj[1]-t.pen[1]);$('#rvd7').textContent='울타리 반지름 '+R+' · 바닥 (3, 1)';
+    $('#rve7').innerHTML='ⓐ 끝점 ('+fmt(t.proj[0],3)+', '+fmt(t.proj[1],3)+') · ⓑ 끝점 ('+fmt(t.pen[0],3)+', '+fmt(t.pen[1],3)+') · 거리 <b>'+fmt(d,4)+'</b>'+(RVS['7'].done[0]?' → 식으로는 λ = √10 ÷ '+R+' − 1 = '+fmt(Math.sqrt(10)/R-1,3):'');
+    rvHit('7',0,d<0.02);v.dirty=true;}
+  rvSlide('rv7l',function(x){return x.toFixed(2);},function(x){lam=x;RVS['7'].touched=true;up();});
+  $('#rvs7').onclick=function(){i=(i+1)%P7.length;lam=0;setSl('rv7l',0,function(x){return x.toFixed(2);});rvReset('7');up();};rvReset('7');up();})();
+
+/* 복습 8 — 다른 바닥에서 라쏘의 모서리 */
+(function(){var P8=[[3,1],[2.5,0.5],[4,2],[2,1.5]],i=0,t=0.5;
+  rvBox('8',{title:'w₂가 정확히 0인 구간과 울타리가 풀리는 순간',desc:'바닥이 바뀌면 "모서리에 붙는 구간"의 길이도 바뀝니다. 마름모 크기 t를 움직여 두 경계를 찾으세요.',aria:'마름모 울타리와 라쏘의 답',
+    sliders:[['rv8t','마름모 크기 t',0.2,6,0.05,0.5]],missions:['w₂가 정확히 0으로 남는 가장 큰 t 찾기 (0.06 안)','라쏘 λ가 0이 되는(울타리가 풀리는) 가장 작은 t 찾기 (0.08 안)']});
+  var v=V($('#rvc8'),function(){var a=P8[i],l=RV.lasso(a,t),P=plane($('#rvc8'),{xr:[-2.6,5.4],yr:[-2.4,3.2],step:1,xl:'w₁',yl:'w₂',stamp:'복습 · 조건 '+(i+1)});
+    [0.5,1,2,3].forEach(function(q,k){P.poly(ellipse(a[0],a[1],q,q),U.cmap(0.12+k*0.2,0.5),1.4);});var D=[[t,0],[0,t],[-t,0],[0,-t]];P.fill(D,'rgba(214,69,58,.08)');P.poly(D,cssv('--eye'),2.4,[],true);
+    P.dot(a[0],a[1],cssv('--gfp'),5);P.dot(l.w[0],l.w[1],'#f1b646',7);});
+  function up(){var a=P8[i],l=RV.lasso(a,t);$('#rvd8').textContent='바닥 ('+a[0]+', '+a[1]+')';
+    $('#rve8').innerHTML='라쏘의 답 ('+fmt(l.w[0],3)+', '+(l.w[1]===0?'<b>0</b>':fmt(l.w[1],3))+') · λ = <b>'+fmt(l.lam,3)+'</b> · '+(l.w[1]===0?'모서리에 붙음':l.lam>0?'변 위에 닿음':'울타리가 안 닿음');
+    rvHit('8',0,l.w[1]===0&&t>=a[0]-a[1]-0.06);rvHit('8',1,l.lam===0&&t-(a[0]+a[1])<0.08);v.dirty=true;}
+  rvSlide('rv8t',function(x){return x.toFixed(2);},function(x){t=x;RVS['8'].touched=true;up();});
+  $('#rvs8').onclick=function(){i=(i+1)%P8.length;t=0.5;setSl('rv8t',0.5,function(x){return x.toFixed(2);});rvReset('8');up();};rvReset('8');up();})();
+
+/* 복습 대결 — 그릇의 길쭉함 */
+(function(){var k=3;
+  rvBox('9',{title:'그릇이 얼마나 길쭉하면 잘라 붙이기가 틀리나',desc:'오차 (w₁ − 2)² + k(w₂ − 1)²에서 길쭉함 k를 바꿉니다. 주판봇(잘라 붙이기)과 초파리(닿는 점)의 오차를 견줘 보세요.',aria:'길쭉함을 바꾸는 오차 등고선과 두 답',fixed:true,
+    sliders:[['rv9k','길쭉함 k',1,15,0.5,3]],missions:['잘라 붙이기가 정확히 맞는 길쭉함 찾기','잘라 붙이기의 오차가 최적보다 50% 넘게 커지는 길쭉함 찾기']});
+  var v=V($('#rvc9'),function(){var r=RV.duelK(k),P=plane($('#rvc9'),{xr:[-1.6,3.2],yr:[-1.4,2.2],step:1,xl:'w₁',yl:'w₂',stamp:'복습 · 대결'});
+    [r.bestLoss,r.clipLoss].forEach(function(L,j){P.poly(ellipse(2,1,Math.sqrt(L),Math.sqrt(L/k)),j?cssv('--c-robo'):cssv('--eye'),2,[5,4]);});
+    P.poly(CIRC,cssv('--terrain'),2.6);P.dot(2,1,cssv('--gfp'),5);P.dot(r.clip[0],r.clip[1],cssv('--c-robo'),7);P.dot(r.best[0],r.best[1],cssv('--c-fly'),6);});
+  function up(){var r=RV.duelK(k),q=r.clipLoss/r.bestLoss;$('#rve9').innerHTML='주판봇 오차 <b>'+fmt(r.clipLoss,3)+'</b> · 초파리 오차 <b>'+fmt(r.bestLoss,3)+'</b> · 주판봇 ÷ 초파리 = <b>'+fmt(q,3)+'</b>배';
+    rvHit('9',0,q<1.0005);rvHit('9',1,q>1.5);v.dirty=true;}
+  rvSlide('rv9k',function(x){return x.toFixed(1);},function(x){k=x;RVS['9'].touched=true;up();});rvReset('9');up();})();
+
+U.Study({quiz:{
+ q1:[{q:'등고선 지도에서 그래디언트 화살표와 등고선이 이루는 각도는?',o:['언제나 90°','언제나 45°','점마다 다르다'],a:0,why:'등고선을 따라가면 높이가 안 변하므로, 가장 빨리 오르는 쪽은 그 선과 직각입니다.',hint:'1단계에서 점을 옮기며 각도 숫자를 보세요.'}],
+ q2:[{q:'원 x² + y² = 1 위에서 x + y가 가장 큰 점에서 성립하는 것은?',o:['∇f = 0','∇f와 ∇g가 한 직선 위에 있다','x = 0'],a:1,why:'(1, 1) = λ(2x, 2y). 목표 화살표가 울타리 화살표의 λ배이면 울타리를 따라 더 갈 데가 없습니다.',hint:'직선이 원에 "딱 닿는" 순간을 떠올려 보세요.'},
+     {q:'2단계의 λ = 0.707이 뜻하는 것은?',o:['가장 큰 값','울타리를 1 → 1.01로 넓히면 가장 큰 값이 약 0.007 커진다','각도 45°'],a:1,why:'λ는 울타리 한 단위의 값어치입니다. 0.01 × 0.707 ≈ 0.007.',hint:'"울타리를 1 → 1.01로 넓히면" 상자를 보세요.'}],
+ q3:[{q:'16톤을 가장 싸게 만드는 점에서 성립하는 것은?',o:['사람만 쓴다','사람과 기계의 만 원당 생산이 같다','기계가 사람보다 많다'],a:1,why:'MP_L ÷ w = MP_K ÷ r. 이 공장에서는 0.1414로 같습니다.',hint:'4단계 슬라이더를 움직여 두 숫자가 같아지는 곳을 찾으세요.'},
+     {q:'공장 문제의 λ ≈ 7.07은?',o:['임금','1톤 더 만들 때 늘어나는 가장 싼 비용(한계비용)','기계 대수'],a:1,why:'17톤의 가장 싼 비용 − 16톤의 가장 싼 비용 = 7.07.',hint:'"17톤으로 올려 보기".'}],
+ q6:[{q:'보통 회귀(울타리 없음)는 릿지의 어떤 경우와 같나?',o:['λ = 0','λ = 1','λ가 아주 클 때'],a:0,why:'울타리가 너무 넓어 바닥이 그 안에 있으면 울타리가 닿지 않고 λ = 0. 답이 보통 회귀와 같습니다.',hint:'6단계에서 반지름을 3.16보다 크게 해 보세요.'},
+     {q:'반지름 1 울타리의 릿지 답이 (3, 1)이라고 나왔다. 무엇이 이상한가?',o:['아무 문제 없다','(3, 1)은 울타리 밖이다','w₂가 0이 아니다'],a:1,why:'(3, 1)의 길이는 √10 ≈ 3.16 > 1. 울타리를 어긴 답입니다.',hint:'AI 판단 코너.'}],
+ q8:[{q:'라쏘가 이 페이지의 방법(두 화살표 나란히)으로 풀리지 않는 까닭은?',o:['라쏘는 오차를 안 줄여서','마름모 모서리는 뾰족해 울타리 화살표가 하나로 정해지지 않아서','라쏘는 울타리가 없어서'],a:1,why:'|w|는 0에서 꺾여 미분이 없습니다. 모서리에서는 화살표 대신 "부채꼴"로 판정합니다.',hint:'y = |x|의 그래프.'},
+     {q:'울타리 크기 1에서 라쏘의 답 (1, 0)이 업무에서 뜻하는 것은?',o:['두 특성을 모두 키운다','할인(x₂) 특성을 지운다','오차가 0이다'],a:1,why:'w₂ = 0이면 x₂가 예측에 전혀 쓰이지 않습니다. 라쏘가 특성 선택에 쓰이는 이유입니다.',hint:'w₂의 값.'}],
+ duel:[{q:'대결에서 주판봇(잘라 붙이기)이 진 이유는?',o:['울타리를 넘어서','그릇이 길쭉하면 바닥에서 가장 가까운 점과 오차가 가장 작은 점이 달라서','계산이 틀려서'],a:1,why:'둥근 그릇에서는 두 점이 같지만(7단계), 길쭉하면 달라집니다. 오차 4.28 vs 2.36.',hint:'7단계와 대결의 그릇 모양 차이.'}]
+}});
+U.start();
+})();
+</script>
+</body>
+</html>

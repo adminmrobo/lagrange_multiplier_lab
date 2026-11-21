@@ -1,0 +1,1663 @@
+{
+ "version": "1.3",
+ "page": "lagrange_coord",
+ "nodes": [
+  {
+   "id": "lab:concept/contour-line",
+   "type": "Concept",
+   "label": {
+    "ko": "등고선",
+    "en": "Contour line"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#s1",
+   "level": 1,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": [],
+   "definition": {
+    "ko": "높이(목표 값)가 같은 점을 이은 선."
+   }
+  },
+  {
+   "id": "lab:concept/gradient",
+   "type": "Concept",
+   "label": {
+    "ko": "그래디언트",
+    "en": "Gradient"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#s1",
+   "level": 1,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": [],
+   "definition": {
+    "ko": "편미분을 모은 화살표. 가장 가파른 오르막, 등고선과 직각."
+   }
+  },
+  {
+   "id": "lab:concept/constraint",
+   "type": "Concept",
+   "label": {
+    "ko": "울타리(제약)",
+    "en": "Constraint"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#s2",
+   "level": 1,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": [],
+   "definition": {
+    "ko": "지켜야 하는 조건. 등식과 부등식이 있다."
+   }
+  },
+  {
+   "id": "lab:concept/tangency-condition",
+   "type": "Concept",
+   "label": {
+    "ko": "닿는 점 조건 ∇f = λ∇g",
+    "en": "Tangency condition"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#s2",
+   "level": 2,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": [],
+   "definition": {
+    "ko": "닿는 점에서 목표와 울타리의 기울기 화살표가 한 직선 위에 놓인다."
+   }
+  },
+  {
+   "id": "lab:concept/lagrangian",
+   "type": "Concept",
+   "label": {
+    "ko": "라그랑지안",
+    "en": "Lagrangian"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#s4",
+   "level": 2,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": [],
+   "definition": {
+    "ko": "목표 − λ × 울타리 식. 편미분을 모두 0으로 놓아 푼다."
+   }
+  },
+  {
+   "id": "lab:concept/lagrange-multiplier",
+   "type": "Concept",
+   "label": {
+    "ko": "라그랑주 승수 λ",
+    "en": "Lagrange multiplier"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#s2",
+   "level": 2,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": [],
+   "definition": {
+    "ko": "울타리를 한 단위 넓힐 때 목표가 바뀌는 양(그림자 가격)."
+   }
+  },
+  {
+   "id": "lab:concept/isoquant",
+   "type": "Concept",
+   "label": {
+    "ko": "등량선·등비용선",
+    "en": "Isoquant and isocost"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#s3",
+   "level": 1,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": [],
+   "definition": {
+    "ko": "같은 생산량 곡선과 같은 비용 직선. 접하는 점이 가장 싼 조합."
+   }
+  },
+  {
+   "id": "lab:concept/marginal-cost",
+   "type": "Concept",
+   "label": {
+    "ko": "한계비용(MC)",
+    "en": "Marginal cost"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#s4",
+   "level": 1,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": [],
+   "definition": {
+    "ko": "한 단위 더 만들 때 늘어나는 비용. 공장 문제의 λ."
+   }
+  },
+  {
+   "id": "lab:method/gradient-descent",
+   "type": "Method",
+   "label": {
+    "ko": "경사하강",
+    "en": "Gradient descent"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#s5",
+   "level": 1,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": [],
+   "definition": {
+    "ko": "새 w = w − 학습률 × 기울기."
+   }
+  },
+  {
+   "id": "lab:method/ridge-regression",
+   "type": "Method",
+   "label": {
+    "ko": "릿지 회귀",
+    "en": "Ridge regression"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#s6",
+   "level": 2,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": [],
+   "definition": {
+    "ko": "가중치에 둥근 울타리(또는 벌점 λ‖w‖²)를 친 회귀."
+   }
+  },
+  {
+   "id": "lab:concept/kkt-conditions",
+   "type": "Concept",
+   "label": {
+    "ko": "KKT 조건",
+    "en": "KKT conditions"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#s6",
+   "level": 2,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": [],
+   "definition": {
+    "ko": "부등식 울타리: 닿으면 λ > 0, 안 닿으면 λ = 0."
+   }
+  },
+  {
+   "id": "lab:method/projected-gradient-descent",
+   "type": "Method",
+   "label": {
+    "ko": "되돌림(투영) 경사하강",
+    "en": "Projected gradient descent"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#s7",
+   "level": 2,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": [],
+   "definition": {
+    "ko": "걸은 뒤 울타리 밖이면 울타리 위로 되돌린다."
+   }
+  },
+  {
+   "id": "lab:concept/penalty-form",
+   "type": "Concept",
+   "label": {
+    "ko": "벌점 꼴",
+    "en": "Penalty form"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#s7",
+   "level": 2,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": [],
+   "definition": {
+    "ko": "울타리 대신 목표에 λ‖w‖²을 더한다. 볼록할 때 울타리 꼴과 같은 답."
+   }
+  },
+  {
+   "id": "lab:method/lasso-regression",
+   "type": "Method",
+   "label": {
+    "ko": "라쏘 회귀",
+    "en": "Lasso regression"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#s8",
+   "level": 2,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": [],
+   "definition": {
+    "ko": "가중치에 마름모 울타리를 친 회귀. 모서리에 닿아 가중치를 정확히 0으로 만든다."
+   }
+  },
+  {
+   "id": "lab:concept/subgradient",
+   "type": "Concept",
+   "label": {
+    "ko": "서브그래디언트",
+    "en": "Subgradient"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#s8",
+   "level": 3,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "mentioned",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": [],
+   "definition": {
+    "ko": "뾰족한 점에서 기울기 하나 대신 쓰는 기울기의 범위."
+   }
+  },
+  {
+   "id": "lab:concept/sparsity",
+   "type": "Concept",
+   "label": {
+    "ko": "희소성(특성 지우기)",
+    "en": "Sparsity"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#s8",
+   "level": 2,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": [],
+   "definition": {
+    "ko": "가중치 일부가 정확히 0이 되는 성질."
+   }
+  },
+  {
+   "id": "lab:method/clip-after-descent",
+   "type": "Method",
+   "label": {
+    "ko": "바닥까지 간 뒤 잘라 붙이기",
+    "en": "Clip after unconstrained descent"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#duel",
+   "level": 1,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": [],
+   "definition": {
+    "ko": "울타리를 무시하고 바닥을 찾은 뒤 울타리 위로 줄인다. 둥근 그릇에서만 맞다."
+   }
+  },
+  {
+   "id": "lab:metric/constrained-loss",
+   "type": "Metric",
+   "label": {
+    "ko": "울타리 안의 오차",
+    "en": "Loss within the constraint"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#duel",
+   "level": 1,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:analogy/hiking-map",
+   "type": "Analogy",
+   "label": {
+    "ko": "등산 지도의 등고선",
+    "en": "Contours on a hiking map"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#s1",
+   "level": 1,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:analogy/yard-wall",
+   "type": "Analogy",
+   "label": {
+    "ko": "담장 안 마당의 가장 높은 곳",
+    "en": "Highest spot inside a walled yard"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#s2",
+   "level": 1,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:analogy/won-per-output",
+   "type": "Analogy",
+   "label": {
+    "ko": "만 원당 생산 맞추기",
+    "en": "Equal output per won"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#s4",
+   "level": 1,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:analogy/fine-sign",
+   "type": "Analogy",
+   "label": {
+    "ko": "멀리 가면 벌금 표지판",
+    "en": "Fine signs near the wall"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#s7",
+   "level": 1,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:analogy/diamond-corner",
+   "type": "Analogy",
+   "label": {
+    "ko": "마름모 모서리에 닿기",
+    "en": "Touching the diamond corner"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#s8",
+   "level": 1,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:limitation/smooth-only",
+   "type": "Limitation",
+   "label": {
+    "ko": "매끄러운 울타리에서만",
+    "en": "Smooth constraints only"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#s8",
+   "level": 2,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:limitation/no-fence-no-lambda",
+   "type": "Limitation",
+   "label": {
+    "ko": "울타리 없으면 λ도 없음",
+    "en": "No constraint, no multiplier"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#s5",
+   "level": 2,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:limitation/convex-equivalence",
+   "type": "Limitation",
+   "label": {
+    "ko": "볼록할 때만 울타리 꼴 = 벌점 꼴",
+    "en": "Constraint and penalty forms agree only when convex"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#s7",
+   "level": 2,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:limitation/round-bowl-clip",
+   "type": "Limitation",
+   "label": {
+    "ko": "잘라 붙이기는 둥근 그릇에서만",
+    "en": "Clipping works only on round bowls"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#duel",
+   "level": 2,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:sim/lg-contour",
+   "type": "Simulation",
+   "label": {
+    "ko": "등고선과 화살표",
+    "en": "Contours and gradient arrow"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#s1",
+   "level": 1,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:sim/lg-circle",
+   "type": "Simulation",
+   "label": {
+    "ko": "원 울타리와 직선 밀기",
+    "en": "Circle constraint and sliding line"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#s2",
+   "level": 1,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:sim/lg-theta",
+   "type": "Simulation",
+   "label": {
+    "ko": "각도로 바꾼 1변수 미분",
+    "en": "One-variable derivative by angle"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#s2",
+   "level": 1,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:sim/lg-factory",
+   "type": "Simulation",
+   "label": {
+    "ko": "등량선과 비용 직선",
+    "en": "Isoquant and isocost"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#s3",
+   "level": 1,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:sim/lg-walk-iso",
+   "type": "Simulation",
+   "label": {
+    "ko": "등량선 따라 걷기",
+    "en": "Walking along the isoquant"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#s4",
+   "level": 1,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:sim/lg-gd",
+   "type": "Simulation",
+   "label": {
+    "ko": "울타리 없는 경사하강",
+    "en": "Unconstrained descent"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#s5",
+   "level": 1,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:sim/lg-radius",
+   "type": "Simulation",
+   "label": {
+    "ko": "울타리 반지름과 λ",
+    "en": "Constraint radius and lambda"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#s6",
+   "level": 1,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:sim/lg-two-roads",
+   "type": "Simulation",
+   "label": {
+    "ko": "되돌림과 벌점 두 길",
+    "en": "Projection and penalty paths"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#s7",
+   "level": 1,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:sim/lg-diamond",
+   "type": "Simulation",
+   "label": {
+    "ko": "마름모와 원",
+    "en": "Diamond and circle"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#s8",
+   "level": 1,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:sim/lg-duel",
+   "type": "Simulation",
+   "label": {
+    "ko": "잘라 붙이기 대결",
+    "en": "Clipping duel"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#duel",
+   "level": 1,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:question/lg-fence",
+   "type": "Question",
+   "label": {
+    "ko": "울타리가 있을 때 가장 좋은 점은 어떻게 찾을까?",
+    "en": "How to find the best point under a constraint?"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#top",
+   "level": 1,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:question/lg-lasso-tools",
+   "type": "Question",
+   "label": {
+    "ko": "모서리가 있는 울타리는 어떤 연장으로 풀까?",
+    "en": "Which tools solve constraints with corners?"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#s8",
+   "level": 3,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:work/bussotti2003genesis",
+   "type": "Work",
+   "label": {
+    "ko": "Bussotti 2003",
+    "en": "Bussotti 2003"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#top",
+   "level": 1,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:work/hoerl1970ridge",
+   "type": "Work",
+   "label": {
+    "ko": "Hoerl·Kennard 1970",
+    "en": "Hoerl & Kennard 1970"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#top",
+   "level": 1,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:work/tibshirani1996lasso",
+   "type": "Work",
+   "label": {
+    "ko": "Tibshirani 1996",
+    "en": "Tibshirani 1996"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#top",
+   "level": 1,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:work/matharium_lagrange",
+   "type": "Work",
+   "label": {
+    "ko": "matharium 「Lagrange Multipliers」",
+    "en": "matharium Lagrange Multipliers"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#top",
+   "level": 1,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:claim/lagrange-1788",
+   "type": "Claim",
+   "label": {
+    "ko": "라그랑주는 『해석역학』(1788)에서 승수 방법을 썼다",
+    "en": "Lagrange used multipliers in Mécanique analytique (1788)"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#s2",
+   "level": 2,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": [],
+   "source": [
+    {
+     "ref": "bussotti2003genesis",
+     "loc": "본문 2절"
+    }
+   ]
+  },
+  {
+   "id": "lab:claim/ridge-1970",
+   "type": "Claim",
+   "label": {
+    "ko": "능형 회귀는 가중치 크기에 벌점을 더해 큰 계수를 누른다",
+    "en": "Ridge regression penalizes coefficient size"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#s6",
+   "level": 2,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": [],
+   "source": [
+    {
+     "ref": "hoerl1970ridge",
+     "loc": "2절"
+    }
+   ]
+  },
+  {
+   "id": "lab:claim/lasso-1996",
+   "type": "Claim",
+   "label": {
+    "ko": "라쏘는 절댓값 합 제약으로 일부 계수를 정확히 0으로 만든다",
+    "en": "The lasso sets some coefficients exactly to zero via an L1 constraint"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#s8",
+   "level": 2,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": [],
+   "source": [
+    {
+     "ref": "tibshirani1996lasso",
+     "loc": "1–2절"
+    }
+   ]
+  },
+  {
+   "id": "lab:claim/matharium-circle",
+   "type": "Claim",
+   "label": {
+    "ko": "원 위에서 x + y가 가장 큰 점은 (1/√2, 1/√2)이다",
+    "en": "On the unit circle, x + y is largest at (1/√2, 1/√2)"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#s2",
+   "level": 2,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": [],
+   "source": [
+    {
+     "ref": "matharium_lagrange",
+     "loc": "Example"
+    }
+   ]
+  },
+  {
+   "id": "lab:quiz/lg-q1-1",
+   "type": "QuizItem",
+   "label": {
+    "ko": "q1 문제 1",
+    "en": "Quiz q1-1"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#q1",
+   "level": 1,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:quiz/lg-q2-1",
+   "type": "QuizItem",
+   "label": {
+    "ko": "q2 문제 1",
+    "en": "Quiz q2-1"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#q2",
+   "level": 1,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:quiz/lg-q2-2",
+   "type": "QuizItem",
+   "label": {
+    "ko": "q2 문제 2",
+    "en": "Quiz q2-2"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#q2",
+   "level": 1,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:quiz/lg-q3-1",
+   "type": "QuizItem",
+   "label": {
+    "ko": "q3 문제 1",
+    "en": "Quiz q3-1"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#q3",
+   "level": 1,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:quiz/lg-q3-2",
+   "type": "QuizItem",
+   "label": {
+    "ko": "q3 문제 2",
+    "en": "Quiz q3-2"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#q3",
+   "level": 1,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:quiz/lg-q6-1",
+   "type": "QuizItem",
+   "label": {
+    "ko": "q6 문제 1",
+    "en": "Quiz q6-1"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#q6",
+   "level": 1,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:quiz/lg-q6-2",
+   "type": "QuizItem",
+   "label": {
+    "ko": "q6 문제 2",
+    "en": "Quiz q6-2"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#q6",
+   "level": 1,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:quiz/lg-q8-1",
+   "type": "QuizItem",
+   "label": {
+    "ko": "q8 문제 1",
+    "en": "Quiz q8-1"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#q8",
+   "level": 1,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:quiz/lg-q8-2",
+   "type": "QuizItem",
+   "label": {
+    "ko": "q8 문제 2",
+    "en": "Quiz q8-2"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#q8",
+   "level": 1,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:quiz/lg-duel-1",
+   "type": "QuizItem",
+   "label": {
+    "ko": "duel 문제 1",
+    "en": "Quiz duel-1"
+   },
+   "page": "lagrange_coord",
+   "anchor": "#duel",
+   "level": 1,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "explained",
+   "family": "optimization",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  }
+ ],
+ "edges": [
+  {
+   "s": "lab:analogy/hiking-map",
+   "p": "lab:analogyOf",
+   "o": "lab:concept/gradient",
+   "anchor": "#s1",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:analogy/yard-wall",
+   "p": "lab:analogyOf",
+   "o": "lab:concept/tangency-condition",
+   "anchor": "#s2",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:analogy/won-per-output",
+   "p": "lab:analogyOf",
+   "o": "lab:concept/lagrange-multiplier",
+   "anchor": "#s4",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:analogy/fine-sign",
+   "p": "lab:analogyOf",
+   "o": "lab:concept/penalty-form",
+   "anchor": "#s7",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:analogy/diamond-corner",
+   "p": "lab:analogyOf",
+   "o": "lab:concept/sparsity",
+   "anchor": "#s8",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:concept/tangency-condition",
+   "p": "lab:hasLimitation",
+   "o": "lab:limitation/smooth-only",
+   "anchor": "#s8",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:limitation/smooth-only",
+   "p": "lab:addressedBy",
+   "o": "lab:concept/subgradient",
+   "anchor": "#s8",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:method/gradient-descent",
+   "p": "lab:hasLimitation",
+   "o": "lab:limitation/no-fence-no-lambda",
+   "anchor": "#s5",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:limitation/no-fence-no-lambda",
+   "p": "lab:addressedBy",
+   "o": "lab:method/ridge-regression",
+   "anchor": "#s6",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:concept/penalty-form",
+   "p": "lab:hasLimitation",
+   "o": "lab:limitation/convex-equivalence",
+   "anchor": "#s7",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:method/clip-after-descent",
+   "p": "lab:hasLimitation",
+   "o": "lab:limitation/round-bowl-clip",
+   "anchor": "#duel",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:concept/contour-line",
+   "p": "lab:prerequisiteOf",
+   "o": "lab:concept/gradient",
+   "anchor": "#sum",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:concept/gradient",
+   "p": "lab:prerequisiteOf",
+   "o": "lab:concept/tangency-condition",
+   "anchor": "#sum",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:concept/constraint",
+   "p": "lab:prerequisiteOf",
+   "o": "lab:concept/tangency-condition",
+   "anchor": "#sum",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:concept/tangency-condition",
+   "p": "lab:prerequisiteOf",
+   "o": "lab:concept/lagrange-multiplier",
+   "anchor": "#sum",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:concept/tangency-condition",
+   "p": "lab:prerequisiteOf",
+   "o": "lab:concept/lagrangian",
+   "anchor": "#sum",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:concept/lagrangian",
+   "p": "lab:prerequisiteOf",
+   "o": "lab:concept/marginal-cost",
+   "anchor": "#sum",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:method/gradient-descent",
+   "p": "lab:prerequisiteOf",
+   "o": "lab:method/ridge-regression",
+   "anchor": "#sum",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:method/ridge-regression",
+   "p": "lab:prerequisiteOf",
+   "o": "lab:method/lasso-regression",
+   "anchor": "#sum",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:concept/kkt-conditions",
+   "p": "lab:prerequisiteOf",
+   "o": "lab:method/ridge-regression",
+   "anchor": "#sum",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:concept/lagrange-multiplier",
+   "p": "lab:relatedTo",
+   "o": "lab:concept/marginal-cost",
+   "anchor": "#s4",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:concept/isoquant",
+   "p": "lab:partOf",
+   "o": "lab:concept/tangency-condition",
+   "anchor": "#s3",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:method/ridge-regression",
+   "p": "lab:contrastsWith",
+   "o": "lab:method/lasso-regression",
+   "anchor": "#s8",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:method/lasso-regression",
+   "p": "lab:relatedTo",
+   "o": "lab:concept/sparsity",
+   "anchor": "#s8",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:method/lasso-regression",
+   "p": "lab:relatedTo",
+   "o": "lab:concept/subgradient",
+   "anchor": "#s8",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:method/projected-gradient-descent",
+   "p": "lab:solves",
+   "o": "lab:method/ridge-regression",
+   "anchor": "#s7",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:concept/penalty-form",
+   "p": "lab:relatedTo",
+   "o": "lab:method/ridge-regression",
+   "anchor": "#s7",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:method/projected-gradient-descent",
+   "p": "lab:contrastsWith",
+   "o": "lab:concept/penalty-form",
+   "anchor": "#s7",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:concept/kkt-conditions",
+   "p": "lab:relatedTo",
+   "o": "lab:concept/lagrange-multiplier",
+   "anchor": "#s6",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:concept/gradient",
+   "p": "lab:demonstratedBy",
+   "o": "lab:sim/lg-contour",
+   "anchor": "#s1",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:concept/tangency-condition",
+   "p": "lab:demonstratedBy",
+   "o": "lab:sim/lg-circle",
+   "anchor": "#s2",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:concept/tangency-condition",
+   "p": "lab:demonstratedBy",
+   "o": "lab:sim/lg-theta",
+   "anchor": "#s2",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:concept/isoquant",
+   "p": "lab:demonstratedBy",
+   "o": "lab:sim/lg-factory",
+   "anchor": "#s3",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:concept/marginal-cost",
+   "p": "lab:demonstratedBy",
+   "o": "lab:sim/lg-walk-iso",
+   "anchor": "#s4",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:method/gradient-descent",
+   "p": "lab:demonstratedBy",
+   "o": "lab:sim/lg-gd",
+   "anchor": "#s5",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:concept/kkt-conditions",
+   "p": "lab:demonstratedBy",
+   "o": "lab:sim/lg-radius",
+   "anchor": "#s6",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:concept/penalty-form",
+   "p": "lab:demonstratedBy",
+   "o": "lab:sim/lg-two-roads",
+   "anchor": "#s7",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:method/lasso-regression",
+   "p": "lab:demonstratedBy",
+   "o": "lab:sim/lg-diamond",
+   "anchor": "#s8",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:method/clip-after-descent",
+   "p": "lab:demonstratedBy",
+   "o": "lab:sim/lg-duel",
+   "anchor": "#duel",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:method/clip-after-descent",
+   "p": "lab:evaluatedBy",
+   "o": "lab:metric/constrained-loss",
+   "anchor": "#duel",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:concept/tangency-condition",
+   "p": "lab:evaluatedBy",
+   "o": "lab:metric/constrained-loss",
+   "anchor": "#duel",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:method/clip-after-descent",
+   "p": "lab:contrastsWith",
+   "o": "lab:concept/tangency-condition",
+   "anchor": "#duel",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:concept/constraint",
+   "p": "lab:raises",
+   "o": "lab:question/lg-fence",
+   "anchor": "#top",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:method/lasso-regression",
+   "p": "lab:raises",
+   "o": "lab:question/lg-lasso-tools",
+   "anchor": "#s8",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:claim/lagrange-1788",
+   "p": "lab:supports",
+   "o": "lab:concept/lagrange-multiplier",
+   "anchor": "#s2",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:claim/lagrange-1788",
+   "p": "lab:assertedIn",
+   "o": "lab:work/bussotti2003genesis",
+   "anchor": "#s2",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:claim/ridge-1970",
+   "p": "lab:supports",
+   "o": "lab:method/ridge-regression",
+   "anchor": "#s6",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:claim/ridge-1970",
+   "p": "lab:assertedIn",
+   "o": "lab:work/hoerl1970ridge",
+   "anchor": "#s6",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:claim/lasso-1996",
+   "p": "lab:supports",
+   "o": "lab:method/lasso-regression",
+   "anchor": "#s8",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:claim/lasso-1996",
+   "p": "lab:assertedIn",
+   "o": "lab:work/tibshirani1996lasso",
+   "anchor": "#s8",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:claim/matharium-circle",
+   "p": "lab:supports",
+   "o": "lab:concept/tangency-condition",
+   "anchor": "#s2",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:claim/matharium-circle",
+   "p": "lab:assertedIn",
+   "o": "lab:work/matharium_lagrange",
+   "anchor": "#s2",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:concept/gradient",
+   "p": "lab:broader",
+   "o": "lab:topic/calculus-optimization-math",
+   "anchor": "#sum",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:concept/tangency-condition",
+   "p": "lab:broader",
+   "o": "lab:topic/calculus-optimization-math",
+   "anchor": "#sum",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:concept/lagrangian",
+   "p": "lab:broader",
+   "o": "lab:topic/calculus-optimization-math",
+   "anchor": "#sum",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:concept/lagrange-multiplier",
+   "p": "lab:broader",
+   "o": "lab:topic/calculus-optimization-math",
+   "anchor": "#sum",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:concept/kkt-conditions",
+   "p": "lab:broader",
+   "o": "lab:topic/calculus-optimization-math",
+   "anchor": "#sum",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:concept/subgradient",
+   "p": "lab:broader",
+   "o": "lab:topic/calculus-optimization-math",
+   "anchor": "#sum",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:method/gradient-descent",
+   "p": "lab:broader",
+   "o": "lab:topic/gradient-descent",
+   "anchor": "#s5",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:method/ridge-regression",
+   "p": "lab:broader",
+   "o": "lab:topic/weight-decay",
+   "anchor": "#s6",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:method/lasso-regression",
+   "p": "lab:broader",
+   "o": "lab:topic/weight-decay",
+   "anchor": "#s8",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:quiz/lg-q1-1",
+   "p": "lab:assesses",
+   "o": "lab:concept/gradient",
+   "anchor": "#q1",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:quiz/lg-q2-1",
+   "p": "lab:assesses",
+   "o": "lab:concept/tangency-condition",
+   "anchor": "#q2",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:quiz/lg-q2-2",
+   "p": "lab:assesses",
+   "o": "lab:concept/lagrange-multiplier",
+   "anchor": "#q2",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:quiz/lg-q3-1",
+   "p": "lab:assesses",
+   "o": "lab:concept/isoquant",
+   "anchor": "#q3",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:quiz/lg-q3-2",
+   "p": "lab:assesses",
+   "o": "lab:concept/marginal-cost",
+   "anchor": "#q3",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:quiz/lg-q6-1",
+   "p": "lab:assesses",
+   "o": "lab:concept/kkt-conditions",
+   "anchor": "#q6",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:quiz/lg-q6-2",
+   "p": "lab:assesses",
+   "o": "lab:method/ridge-regression",
+   "anchor": "#q6",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:quiz/lg-q8-1",
+   "p": "lab:assesses",
+   "o": "lab:concept/subgradient",
+   "anchor": "#q8",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:quiz/lg-q8-2",
+   "p": "lab:assesses",
+   "o": "lab:concept/sparsity",
+   "anchor": "#q8",
+   "confidence": "high"
+  },
+  {
+   "s": "lab:quiz/lg-duel-1",
+   "p": "lab:assesses",
+   "o": "lab:method/clip-after-descent",
+   "anchor": "#duel",
+   "confidence": "high"
+  }
+ ]
+}

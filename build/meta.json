@@ -1,0 +1,42 @@
+{
+ "title": "좌표로 본 라그랑주 승수 — 울타리 안의 최적점",
+ "series": "좌표축 위의 그릇 — 3D 지도로 본 모델 최적화 (독립 챕터, 별도 저장소)",
+ "number": "7",
+ "creator": [
+  {
+   "name": "안상선",
+   "role": "author",
+   "affiliation": "(주)M-Robo"
+  }
+ ],
+ "contributor": [
+  {
+   "name": "AI 보조 제작",
+   "role": "assistant"
+  }
+ ],
+ "date": "2026-11-22",
+ "version": "1.1",
+ "language": [
+  "ko"
+ ],
+ "license": "",
+ "url": "https://adminmrobo.github.io/lagrange_multiplier_lab/",
+ "about": [
+  "lab:concept/tangency-condition",
+  "lab:concept/lagrange-multiplier",
+  "lab:concept/marginal-cost",
+  "lab:method/ridge-regression",
+  "lab:method/lasso-regression"
+ ],
+ "basedOn": [
+  "bussotti2003genesis",
+  "hoerl1970ridge",
+  "tibshirani1996lasso",
+  "matharium_lagrange"
+ ],
+ "educationalLevel": "입문",
+ "learningResourceType": "interactive explainer",
+ "registry": "KG_00_registry 0.2",
+ "suggestedCitation": "안상선 (2026). 좌표로 본 라그랑주 승수 — 울타리 안의 최적점. 좌표축 위의 그릇 — 3D 지도로 본 모델 최적화, 독립 챕터, v1.0."
+}
