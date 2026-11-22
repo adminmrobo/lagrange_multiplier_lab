@@ -9,7 +9,7 @@
 <meta property="og:description" content="등고선이 울타리에 닿는 점 찾기. 공장의 노동·자본과 회귀의 가중치가 같은 그림으로 풀립니다.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://adminmrobo.github.io/lagrange_multiplier_lab/">
-<meta property="og:image" content="https://adminmrobo.github.io/optimization_3d_map/img/cover_index.webp">
+<meta property="og:image" content="https://adminmrobo.github.io/lagrange_multiplier_lab/img/cover.webp">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -335,6 +335,10 @@ details.eqx[open] summary{margin-bottom:6px}
 .roads div b{display:block;color:var(--c-doc)}
 @media(max-width:760px){.roads{grid-template-columns:1fr}}
 .hcanvas canvas{height:340px}
+.scene-fig{max-width:760px;margin:6px auto 16px;border-radius:14px;overflow:hidden;border:1px solid var(--rule);background:#fff}
+.scene-fig img{display:block;width:100%;height:auto;aspect-ratio:3/2}
+.scene-fig figcaption{font-size:13px;color:var(--muted);padding:6px 12px}
+
 .rv{border:2px solid var(--c-asst);border-radius:14px;padding:14px 16px;margin:20px 0;background:#fff}
 .rv-h{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:8px}
 .rv-h .rv-haru{width:52px;height:52px;border-radius:12px;border:2px solid var(--c-asst);background:#fff}
@@ -370,12 +374,12 @@ details.eqx[open] summary{margin-bottom:6px}
   </div>
 </div></nav>
 
-<!-- lab-cover : 표지 그림(lg_cover)을 받기 전까지 그림판 표지 -->
-<div class="cover" id="cover" data-img="lg_cover"><div class="frame">
-  <canvas id="coverCv" aria-hidden="true"></canvas>
-  <div class="cast4"><img class="s" data-mood="sia_think" alt="" aria-hidden="true"><img data-mood="asst_nervous" alt="" aria-hidden="true"><img class="s" data-mood="moa_think" alt="" aria-hidden="true"><img class="s" data-mood="fly_point" alt="" aria-hidden="true"><img class="s" data-mood="robo_coin" alt="" aria-hidden="true"></div>
-  <span class="cap">하루의 첫 발표 — 인턴의 질문 여덟 개</span>
-  <span class="badge">그림판 표지 · 픽셀아트 표지 준비 중</span>
+<!-- lab-cover -->
+<div class="cover" id="cover" data-img="cover"><div class="frame">
+  <picture>
+    <source type="image/webp" srcset="img/cover_960.webp 960w, img/cover.webp 1600w" sizes="(max-width:1080px) 100vw, 1080px">
+    <img class="art" src="img/cover.webp" width="1600" height="900" alt="연구실 바닥의 좌표평면 지도 앞에서 하루가 긴장한 채 첫 발표를 하고, 시아·모아가 묻고, 초파리 연구원이 등고선이 울타리에 닿는 점을 가리키며 주판봇이 지켜보는 장면. 뒷줄에는 미공개 실루엣 셋이 앉아 있다" fetchpriority="high" decoding="async">
+  </picture>
   <span class="cover-chip">좌표로 본 라그랑주 승수 · 독립 챕터</span>
 </div></div>
 <!-- /lab-cover -->
@@ -429,6 +433,7 @@ details.eqx[open] summary{margin-bottom:6px}
 <!-- 1 -->
 <section class="sec" id="s1" aria-labelledby="h-s1"><div class="wrap">
   <h2 id="h-s1"><span class="hex">1</span>좌표평면 읽는 법 — 등고선과 화살표 <span class="sub">시아의 질문</span></h2>
+  <figure class="scene-fig"><img src="img/scene_s1.webp" width="1200" height="800" loading="lazy" decoding="async" alt="화이트보드의 등고선을 가로지르는 빨간 화살표를 직각으로 그리는 하루와, 각도기를 든 시아"><figcaption>하루가 등고선과 직각인 화살표를 그립니다.</figcaption></figure>
   <div data-dlg="s1"></div>
   <div class="pair">
     <div><div class="tl">일상으로 치면</div>등산 지도의 등고선은 높이가 같은 곳을 이은 선입니다. 등고선을 따라 걸으면 오르지도 내려가지도 않습니다. 그러니 가장 가파르게 오르려면 등고선을 <b>가로질러 직각으로</b> 가야 합니다.</div>
@@ -452,6 +457,7 @@ details.eqx[open] summary{margin-bottom:6px}
 <!-- 2 -->
 <section class="sec" id="s2" aria-labelledby="h-s2"><div class="wrap">
   <h2 id="h-s2"><span class="hex">2</span>원 울타리 위에서 가장 높은 곳 — 같은 답, 세 가지 길 <span class="sub">모아의 질문</span></h2>
+  <figure class="scene-fig"><img src="img/scene_s2.webp" width="1200" height="800" loading="lazy" decoding="async" alt="둥근 울타리에 길쭉한 판자가 한 점에서 닿고, 그 점에서 두 화살표가 같은 직선 위로 솟은 장면"><figcaption>판자(직선)가 울타리(원)에 딱 한 점에서 닿는 순간.</figcaption></figure>
   <div data-dlg="s2"></div>
   <div class="easy" id="ez2"><details class="ez-why" open><summary>왜 이 방법을 쓰나</summary><ol><li>문제: 원 x² + y² = 1 위에서만 걸을 수 있을 때 x + y가 가장 큰 점을 찾고 싶다.</li><li>앞 방법의 한계: "기울기 0인 곳"을 찾으면 x + y는 어디서도 기울기가 0이 아니라 답이 없다. 울타리를 빼고 계산했기 때문이다.</li><li><b>이 방법의 해법: 울타리를 계산 안에 넣는다. ① 울타리를 각도 하나로 바꾸거나 ② 등고선을 밀어 닿는 점을 찾거나 ③ 두 화살표가 한 직선 위에 놓이는 점을 찾는다. 셋 다 같은 답이다.</b></li></ol><p class="ez-easy"><b>쉽게 말하면</b> 담장 안 마당에서 가장 높은 곳은 마당 한가운데가 아니라 담장 어딘가에 붙어 있을 수 있다.</p></details>
   <div class="ez-math"><div class="ez-t">수식이 낯선 분을 위해 — 모아가 묻고 하루가 답합니다</div><div class="ez-q"><img data-mood="moa_think" alt="" aria-hidden="true" style="border-color:var(--c-moa)"><p>∇f = λ∇g… 화살표 두 개가 "나란하다"는 게 무슨 뜻이에요?</p></div><p><b>학교 수학으로 보면</b> 고등학교 <b>삼각함수</b>와 <b>원의 접선</b>입니다. 원 위의 점은 (cos θ, sin θ)로 쓸 수 있고, 접선은 반지름과 직각입니다.</p><table class="ez-tb"><thead><tr><th>식 조각</th><th>읽는 법</th></tr></thead><tbody><tr><td>f = x + y</td><td>높이(목표). 등고선은 기울기 −1인 직선들</td></tr><tr><td>g = x² + y² − 1 = 0</td><td>울타리. 반지름 1인 원</td></tr><tr><td>∇f = (1, 1)</td><td>목표가 가장 빨리 커지는 쪽</td></tr><tr><td>∇g = (2x, 2y)</td><td>울타리에 직각인 쪽(원의 바깥쪽)</td></tr><tr><td>∇f = λ∇g</td><td>두 화살표가 한 직선 위, 길이 비율이 λ</td></tr></tbody></table><p><b>숫자로 한 번 해 보기</b> (1, 1) = λ(2x, 2y)이니 x = y. 원 위라서 2x² = 1, x = y = 0.707. 그러면 λ = 1 ÷ (2 × 0.707) = <b>0.707</b>, 가장 큰 값은 x + y = <b>1.414</b>입니다. 각도로 풀어도 f = cos θ + sin θ, 기울기 −sin θ + cos θ = 0 → θ = 45°로 같습니다.</p><div class="ez-q ez-c"><img data-mood="asst_spark" alt="" aria-hidden="true"><p>나란하다 = 목표 화살표가 울타리 화살표의 몇 배(λ배)다. 그래서 더 갈 데가 없는 거예요!</p></div></div></div>
@@ -479,6 +485,7 @@ details.eqx[open] summary{margin-bottom:6px}
 <!-- 3 -->
 <section class="sec" id="s3" aria-labelledby="h-s3"><div class="wrap">
   <h2 id="h-s3"><span class="hex">3</span>경제 — 16톤을 가장 싸게 만드는 노동·자본 투입점 <span class="sub">모아의 질문</span></h2>
+  <figure class="scene-fig"><img src="img/scene_s3.webp" width="1200" height="800" loading="lazy" decoding="async" alt="탁자 위 작은 공장 모형 위로 휜 띠와 곧은 막대가 한 점에서 닿고, 주판봇이 일꾼 인형만 앞으로 미는 장면"><figcaption>주판봇은 사람만 늘리자고 하지만, 답은 곡선과 직선이 닿는 점입니다.</figcaption></figure>
   <div data-dlg="s3"></div>
   <div class="assume"><b>3·4단계의 가정</b> ① 공장의 생산량 Q = 2√(L·K): 사람 L명과 기계 K대(설명용 식). ② 임금 w = 5만 원, 기계 사용료 r = 10만 원으로 정해져 있다(완전경쟁). ③ 납품량 16톤은 꼭 지킨다(등식 울타리). ④ 이 생산함수는 사람과 기계를 함께 두 배로 늘리면 생산도 두 배(규모수익불변)라서, 한계비용 λ가 생산량과 상관없이 7.07로 일정하고 평균비용과도 같다. 보통 공장처럼 생산을 늘릴수록 비용이 가파르게 오르면 λ도 생산량에 따라 바뀐다.</div>
   <div class="pair">
@@ -522,6 +529,7 @@ details.eqx[open] summary{margin-bottom:6px}
 <!-- 5 -->
 <section class="sec" id="s5" aria-labelledby="h-s5"><div class="wrap">
   <h2 id="h-s5"><span class="hex">5</span>회귀 — 울타리 없는 경사하강 <span class="sub">시아의 질문</span></h2>
+  <figure class="scene-fig"><img src="img/scene_s5.webp" width="1200" height="800" loading="lazy" decoding="async" alt="투명한 그릇 속을 굴러 내려가던 공이 바닥 근처 작은 울타리에 막혀 멈추는 장면"><figcaption>울타리가 없으면 바닥까지, 울타리가 있으면 울타리에서 멈춥니다.</figcaption></figure>
   <div data-dlg="s5"></div>
   <div class="pair">
     <div><div class="tl">일상으로 치면</div>매장 네 곳의 광고·할인과 매출 변화를 보고 "광고 1단위에 매출이 얼마, 할인 1단위에 얼마"를 맞히는 모델을 만듭니다. 맞히는 숫자가 가중치 w₁, w₂이고, 틀린 정도(오차)를 높이로 세우면 그릇이 됩니다. 경사하강은 그릇 바닥까지 한 걸음씩 내려가는 방법입니다.</div>
@@ -589,6 +597,7 @@ details.eqx[open] summary{margin-bottom:6px}
 <!-- 8 -->
 <section class="sec" id="s8" aria-labelledby="h-s8"><div class="wrap">
   <h2 id="h-s8"><span class="hex">8</span>라쏘는 왜 이 방법으로 풀리지 않나 <span class="sub">모아의 질문</span></h2>
+  <figure class="scene-fig"><img src="img/scene_s8.webp" width="1200" height="800" loading="lazy" decoding="async" alt="원 울타리와 마름모 울타리를 나란히 두고, 초파리 연구원이 마름모의 뾰족한 모서리를 가리키는 장면"><figcaption>원은 옆면에, 마름모는 모서리에 닿습니다.</figcaption></figure>
   <div data-dlg="s8"></div>
   <div class="easy"><details class="ez-why" open><summary>왜 이 방법이 안 통하나</summary><ol><li>문제: 라쏘는 울타리를 |w₁| + |w₂| ≤ t(마름모)로 친다. 같은 방법으로 풀고 싶다.</li><li>앞 방법의 한계: 이 페이지의 방법은 "울타리 화살표 ∇g"가 있어야 한다. 마름모의 <b>모서리</b>는 뾰족해서 미분이 없고, 울타리 화살표가 하나로 정해지지 않는다.</li><li><b>그런데 답이 바로 그 모서리에 잘 떨어진다. 그래서 "두 화살표 나란히" 대신 "화살표가 두 모서리 방향 사이(부채꼴)에 들어오나"로 판정하는 다른 도구(서브그래디언트)가 필요하다.</b></li></ol><p class="ez-easy"><b>쉽게 말하면</b> 라쏘가 나쁜 게 아니라, 연장이 다르다. 그리고 모서리에 붙는 성질 덕분에 가중치 하나를 정확히 0으로 만든다(특성 지우기).</p></details>
   <div class="ez-math"><div class="ez-t">수식이 낯선 분을 위해 — 모아가 묻고 하루가 답합니다</div><div class="ez-q"><img data-mood="moa_think" alt="" aria-hidden="true" style="border-color:var(--c-moa)"><p>절댓값이 들어가면 왜 미분이 안 돼요?</p></div><p><b>학교 수학으로 보면</b> 고등학교 <b>절댓값 함수 y = |x|</b>의 그래프입니다. x = 0에서 꺾여 V자가 되니 그 점의 접선 기울기가 하나로 정해지지 않습니다.</p><table class="ez-tb"><thead><tr><th>식 조각</th><th>읽는 법</th></tr></thead><tbody><tr><td>|w₁| + |w₂| ≤ 1</td><td>마름모 울타리. 꼭짓점 (±1, 0), (0, ±1)</td></tr><tr><td>모서리 (1, 0)의 두 면 방향</td><td>(1, 1)과 (1, −1). 그 사이가 부채꼴</td></tr><tr><td>−∇오차 = (4, 2)</td><td>모서리에서 오차가 가장 빨리 줄어드는 쪽</td></tr><tr><td>(4, 2) = 3·(1, 1) + 1·(1, −1)</td><td>두 수가 모두 0 이상 → 부채꼴 안 → 최적</td></tr></tbody></table><p><b>숫자로 한 번 해 보기</b> 같은 오차 (w₁ − 3)² + (w₂ − 1)², 울타리 크기 1. 라쏘의 답은 모서리 <b>(1, 0)</b>, 오차 5. w₂가 <b>정확히 0</b>입니다. 릿지는 (0.949, 0.316), 오차 4.68 — 둘 다 조금씩 줄어들 뿐 0이 되지 않습니다. 벌점 꼴로 쓰면 라쏘의 λ = 4입니다.</p><div class="ez-q ez-c"><img data-mood="asst_spark" alt="" aria-hidden="true"><p>둥근 울타리는 옆면에, 마름모 울타리는 모서리에 닿아요. 그래서 라쏘는 특성을 지울 수 있어요!</p></div></div></div>
@@ -610,6 +619,7 @@ details.eqx[open] summary{margin-bottom:6px}
 <!-- 대결 -->
 <section class="sec" id="duel" aria-labelledby="h-duel"><div class="wrap">
   <h2 id="h-duel">대결 — 내려간 뒤 잘라 붙이면 될까?</h2>
+  <figure class="scene-fig"><img src="img/duel.webp" width="1200" height="800" loading="lazy" decoding="async" alt="길쭉한 타원 등고선 옆 원 울타리 위에서 초파리 연구원과 주판봇이 서로 다른 점에 서 있고 박사가 판정하는 장면"><figcaption>대결 — 닿는 점(초파리) 대 잘라 붙이기(주판봇).</figcaption></figure>
   <div data-dlg="duelpre"></div>
   <p class="lead">이번 그릇은 길쭉합니다: 오차 = (w₁ − 2)² + 10(w₂ − 1)², 울타리는 반지름 1인 원. 주판봇은 "울타리를 무시하고 바닥 (2, 1)까지 간 다음, 원 위로 잘라 붙이면 된다"고 하고, 초파리 연구원은 "등고선이 원에 닿는 점을 찾아야 한다"고 합니다. 판정은 <b>울타리 안에서의 오차</b>(작을수록 좋음)입니다.</p>
   <div class="duel">
@@ -663,6 +673,7 @@ details.eqx[open] summary{margin-bottom:6px}
 
 <section class="sec" id="outro" aria-labelledby="h-outro"><div class="wrap">
   <h2 id="h-outro">아웃트로</h2>
+  <figure class="scene-fig"><img src="img/outro.webp" width="1200" height="800" loading="lazy" decoding="async" alt="첫 발표를 마치고 뿌듯하게 웃는 하루와 박수 치는 실루엣 셋, 원과 마름모가 그려진 칠판 앞의 박사"><figcaption>하루의 첫 발표, 무사히 끝!</figcaption></figure>
   <div data-dlg="outro"></div>
 </div></section>
 </main>
@@ -692,7 +703,7 @@ details.eqx[open] summary{margin-bottom:6px}
     <tr><td>[4]</td><td>matharium, 「Lagrange Multipliers」 인포그래픽 (사용자 제공 자료, 원 게시물 주소·게시일 미확인)</td><td>2 — 원 위의 x + y 예제의 발상. 그림은 새로 그림</td></tr>
   </tbody></table>
   <h3>예시값·설명용 모형인 것</h3>
-  <ul><li>그릇 x²/4 + y², 공장 생산함수 Q = 2√(LK)와 임금 5·사용료 10, 매장 네 곳의 데이터, 대결의 길쭉한 그릇 (w₁ − 2)² + 10(w₂ − 1)²과 그 결과 수치 모두</li><li>표지는 그림판 표지(픽셀아트 표지 지시문은 COVER_PROMPTS.md)</li></ul>
+  <ul><li>그릇 x²/4 + y², 공장 생산함수 Q = 2√(LK)와 임금 5·사용료 10, 매장 네 곳의 데이터, 대결의 길쭉한 그릇 (w₁ − 2)² + 10(w₂ − 1)²과 그 결과 수치 모두</li><li>표지·장면 그림: 16비트 픽셀아트, 젠스파크로 제작(지시문 COVER_PROMPTS.md). 캐릭터 기준 fruitfly-lab-expressions</li></ul>
   <p>숫자 검산: <code>node code/check_lagrange.js</code> (모든 "숫자로 한 번 해 보기"와 대결 결과).</p>
   <p>캐릭터 이름·설정·그림은 저작권자 안상선의 허락 없이 사용할 수 없습니다.</p>
   <p>글 · 안상선 ((주)M-Robo 대표) · <a href="https://adminmrobo.github.io/who_am_i/who_am_i.html">저자 소개</a> · <a href="https://adminmrobo.github.io/optimization_3d_map/">목차</a> · <a href="https://adminmrobo.github.io/optimization_3d_map/first_step_2.html">최적화 첫걸음 ②</a> · <a href="https://adminmrobo.github.io/optimization_3d_map/1_math_map.html">좌표축 위의 그릇 1편</a></p>
@@ -1088,12 +1099,6 @@ U.fillImgs();
 
 /* ── 숫자 요약 ── */
 $('#k-c').textContent=fmt(LG.circ.lam,3);$('#k-f').textContent=fmt(F.costMin(16).lam,2)+'만 원';$('#k-r').textContent=fmt(LG.ridge(1).lam,2);$('#k-l').textContent=fmt(LG.lasso(1).w[1],0);
-
-/* ── 표지 그림판 ── */
-(function(){var cv=$('#coverCv');U.reg(cv,function(dt){if(dt!==0)return;var P=plane(cv,{xr:[-1.6,4.2],yr:[-1.4,2.2],step:1});
-  [0.6,1.4,2.4,3.4,4.4].forEach(function(r,i){P.poly(ellipse(3,1,r,r),U.cmap(0.15+i*0.15,0.55),2);});
-  P.fill([[1,0],[0,1],[-1,0],[0,-1]],'rgba(214,69,58,.08)');P.poly([[1,0],[0,1],[-1,0],[0,-1]],cssv('--eye'),2.4,[6,4],true);P.poly(CIRC,cssv('--terrain'),2.6);
-  var r=LG.ridge(1).w;P.dot(r[0],r[1],'#f1b646',9);P.dot(1,0,cssv('--eye'),7);P.dot(3,1,cssv('--gfp'),6);});})();
 
 /* ── 1 등고선과 화살표 ── */
 var p1=[1.6,0.8];

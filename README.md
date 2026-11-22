@@ -36,6 +36,7 @@ build/
   build.js                 node build/build.js → index.html
 code/check_lagrange.js     숫자 검산 (node code/check_lagrange.js)
 COVER_PROMPTS.md           픽셀풍 표지·장면 그림 지시문 (img/ 에 넣을 이름 포함)
+img/                       표지(cover·cover_960)와 장면 그림 7장 (16비트 픽셀아트, 젠스파크)
 ```
 
 숫자는 모두 설명용 예시입니다. 캐릭터 이름·설정·그림은 저작권자 안상선의 허락 없이 사용할 수 없습니다.
