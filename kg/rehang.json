@@ -1,0 +1,180 @@
+{
+ "version": "1.0",
+ "made": "2026-11-24",
+ "via": "rehang-2026-11-24",
+ "domains": [
+  "math",
+  "econ"
+ ],
+ "note": "분야 뼈대 주제에 다시 걸기(ai-lab-retrofit 15장). links는 자동 후보이며 틀린 줄은 지우면 된다. 빌드 스크립트가 있는 저장소는 빌드 끝에 rehang.apply_overlay()가 이 파일을 적용한다.",
+ "topics": {
+  "lab:topic/convexity": {
+   "ko": "볼록성",
+   "en": "Convexity",
+   "domain": [
+    "math"
+   ],
+   "level": 2
+  },
+  "lab:topic/cost-curves": {
+   "ko": "비용곡선",
+   "en": "Cost curves",
+   "domain": [
+    "econ"
+   ],
+   "level": 2
+  },
+  "lab:topic/gradient": {
+   "ko": "그래디언트(∇)",
+   "en": "Gradient (nabla)",
+   "domain": [
+    "math"
+   ],
+   "level": 2
+  },
+  "lab:topic/gradient-descent": {
+   "ko": "경사하강법",
+   "en": "Gradient descent",
+   "domain": [
+    "ai",
+    "dl"
+   ],
+   "level": 2
+  },
+  "lab:topic/kkt-conditions": {
+   "ko": "KKT 조건",
+   "en": "KKT conditions",
+   "domain": [
+    "math"
+   ],
+   "level": 2
+  },
+  "lab:topic/lagrange-multipliers": {
+   "ko": "라그랑주 승수",
+   "en": "Lagrange multipliers",
+   "domain": [
+    "math"
+   ],
+   "level": 2
+  },
+  "lab:topic/production-function": {
+   "ko": "생산함수",
+   "en": "Production function",
+   "domain": [
+    "econ"
+   ],
+   "level": 2
+  },
+  "lab:topic/variable-selection": {
+   "ko": "변수 선택",
+   "en": "Variable selection",
+   "domain": [
+    "stats"
+   ],
+   "level": 2
+  },
+  "lab:topic/weight-decay": {
+   "ko": "가중치 감쇠(L2)",
+   "en": "Weight decay (L2)",
+   "domain": [
+    "ai",
+    "dl"
+   ],
+   "level": 3
+  }
+ },
+ "links": {
+  "lab:concept/constraint": {
+   "topic": "lab:topic/lagrange-multipliers",
+   "score": 3,
+   "why": "사람이 고름",
+   "ko": "울타리(제약)"
+  },
+  "lab:concept/contour-line": {
+   "topic": "lab:topic/gradient",
+   "score": 3,
+   "why": "사람이 고름",
+   "ko": "등고선"
+  },
+  "lab:concept/gradient": {
+   "topic": "lab:topic/gradient",
+   "score": 3,
+   "why": "사람이 고름",
+   "ko": "그래디언트"
+  },
+  "lab:concept/isoquant": {
+   "topic": "lab:topic/production-function",
+   "score": 3,
+   "why": "사람이 고름",
+   "ko": "등량선·등비용선"
+  },
+  "lab:concept/kkt-conditions": {
+   "topic": "lab:topic/kkt-conditions",
+   "score": 3,
+   "why": "사람이 고름",
+   "ko": "KKT 조건"
+  },
+  "lab:concept/lagrange-multiplier": {
+   "topic": "lab:topic/lagrange-multipliers",
+   "score": 3,
+   "why": "사람이 고름",
+   "ko": "라그랑주 승수 λ"
+  },
+  "lab:concept/lagrangian": {
+   "topic": "lab:topic/lagrange-multipliers",
+   "score": 3,
+   "why": "사람이 고름",
+   "ko": "라그랑지안"
+  },
+  "lab:concept/marginal-cost": {
+   "topic": "lab:topic/cost-curves",
+   "score": 3,
+   "why": "사람이 고름",
+   "ko": "한계비용(MC)"
+  },
+  "lab:concept/subgradient": {
+   "topic": "lab:topic/convexity",
+   "score": 3,
+   "why": "사람이 고름",
+   "ko": "서브그래디언트"
+  },
+  "lab:concept/tangency-condition": {
+   "topic": "lab:topic/lagrange-multipliers",
+   "score": 3,
+   "why": "사람이 고름",
+   "ko": "닿는 점 조건 ∇f = λ∇g"
+  },
+  "lab:method/gradient-descent": {
+   "topic": "lab:topic/gradient-descent",
+   "score": 3,
+   "why": "사람이 고름",
+   "ko": "경사하강"
+  },
+  "lab:method/lasso-regression": {
+   "topic": "lab:topic/variable-selection",
+   "score": 3,
+   "why": "사람이 고름",
+   "ko": "라쏘 회귀"
+  },
+  "lab:method/projected-gradient-descent": {
+   "topic": "lab:topic/gradient-descent",
+   "score": 3,
+   "why": "사람이 고름",
+   "ko": "되돌림(투영) 경사하강"
+  },
+  "lab:method/ridge-regression": {
+   "topic": "lab:topic/weight-decay",
+   "score": 3,
+   "why": "사람이 고름",
+   "ko": "릿지 회귀"
+  }
+ },
+ "retag": {
+  "from": [
+   "ai"
+  ],
+  "to": [
+   "math"
+  ]
+ }
+}
